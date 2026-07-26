@@ -449,17 +449,6 @@ export default function SiteHeader() {
     }
     burgerBtn?.addEventListener("click", toggleOverlay);
 
-    const desktopFolderButtons = root.querySelectorAll(
-      ".header-display-desktop .header-nav-folder-title"
-    );
-    function toggleDesktopFolder(e) {
-      const item = e.currentTarget.closest(".header-nav-item--folder");
-      item?.classList.toggle("header-nav-folder-open");
-    }
-    desktopFolderButtons.forEach((btn) =>
-      btn.addEventListener("click", toggleDesktopFolder)
-    );
-
     const triggers = root.querySelectorAll(".cse-dropdown-trigger");
     function openMobileFolder(e) {
       e.preventDefault();
@@ -478,9 +467,6 @@ export default function SiteHeader() {
 
     return () => {
       burgerBtn?.removeEventListener("click", toggleOverlay);
-      desktopFolderButtons.forEach((btn) =>
-        btn.removeEventListener("click", toggleDesktopFolder)
-      );
       triggers.forEach((t) => t.removeEventListener("click", openMobileFolder));
       backButtons.forEach((b) => b.removeEventListener("click", closeMobileFolder));
     };
