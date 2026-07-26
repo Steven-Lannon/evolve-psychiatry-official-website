@@ -457,7 +457,13 @@ export default function SiteHeader() {
     function toggleOverlay() {
       const isOpen = header.classList.toggle("header-menu-open");
       if (headerMenu) {
-        headerMenu.style.display = isOpen ? "block" : "";
+        // Squarespace's own CSS gates this panel's visibility on
+        // opacity/visibility (with a transition), expecting its own JS
+        // to flip those when opening. We don't have that JS, so set
+        // them directly here instead of just display.
+        headerMenu.style.display = isOpen ? "flex" : "";
+        headerMenu.style.opacity = isOpen ? "1" : "0";
+        headerMenu.style.visibility = isOpen ? "visible" : "hidden";
       }
       document.body.classList.toggle("sqs-menu-open", isOpen);
     }
