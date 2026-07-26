@@ -8,7 +8,7 @@
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
 const API_KEY = process.env.GOOGLE_SHEETS_API_KEY;
 // Change this if your data lives on a differently-named tab.
-const RANGE = "Active!A:M";
+const RANGE = "Active!A:Z";
 
 const ALLOWED_HEADERS = [
   "First Name",
