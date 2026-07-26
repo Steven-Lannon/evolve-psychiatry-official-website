@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
 :root {
   --ink: #1c2b33;
   --muted: #5b6b72;
@@ -281,6 +283,8 @@ a {
 .site-header {
   background: #fff;
   border-bottom: 1px solid var(--line);
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Helvetica, Arial, sans-serif;
 }
 .announcement-bar {
   background: #6b6864;
@@ -312,15 +316,17 @@ a {
 .main-nav {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 0;
   flex-wrap: wrap;
   flex: 1;
 }
 .main-nav > a {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--ink);
+  font-size: 16px;
+  font-weight: 300;
+  color: rgb(0, 0, 0);
   text-decoration: none;
+  padding: 7.8624px 33.696px;
+  line-height: 16px;
 }
 .main-nav > a:hover {
   color: var(--accent);
@@ -329,10 +335,13 @@ a {
   position: relative;
 }
 .nav-item-folder > a {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--ink);
+  font-size: 16px;
+  font-weight: 300;
+  color: rgb(0, 0, 0);
   text-decoration: none;
+  padding: 7.8624px 33.696px;
+  line-height: 16px;
+  display: inline-block;
 }
 .nav-item-folder:hover > a {
   color: var(--accent);
@@ -409,6 +418,8 @@ a {
   color: #d5dadc;
   padding: 48px 24px 32px;
   margin-top: 48px;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Helvetica, Arial, sans-serif;
 }
 .footer-columns {
   max-width: 1000px;
