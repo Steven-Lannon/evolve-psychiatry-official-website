@@ -333,18 +333,28 @@ const NAV_LINKS = [
 function MobileMenu({ open, onClose }) {
   return (
     <div className={`custom-mobile-menu ${open ? "custom-mobile-menu--open" : ""}`}>
-      <button
-        className="custom-mobile-menu-close"
-        onClick={onClose}
-        aria-label="Close Menu"
-      >
-        &times;
-      </button>
+      <div className="custom-mobile-menu-topbar">
+        <img
+          src="//images.squarespace-cdn.com/content/v1/6525fe2f00c9de2ec400ea4f/543bd20d-27e9-4baa-817b-fe18c5434f79/evolve+new+logo+with+name.jpg?format=1500w"
+          alt="Evolve Psychiatry"
+          className="custom-mobile-menu-logo"
+        />
+        <button
+          className="custom-mobile-menu-close"
+          onClick={onClose}
+          aria-label="Close Menu"
+        >
+          &times;
+        </button>
+      </div>
       <nav className="custom-mobile-menu-nav">
         {NAV_LINKS.map((item) =>
           item.children ? (
             <details key={item.label} className="custom-mobile-menu-group">
-              <summary>{item.label}</summary>
+              <summary>
+                {item.label}
+                <span className="custom-mobile-menu-chevron">&#8250;</span>
+              </summary>
               <div className="custom-mobile-menu-sublist">
                 {item.children.map((child) => (
                   <a
