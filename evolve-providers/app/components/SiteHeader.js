@@ -446,7 +446,12 @@ export default function SiteHeader() {
     if (!root) return;
 
     const header = root.querySelector(".header");
-    const burgerBtn = root.querySelector(".header-burger-btn");
+    // The header markup has separate desktop and mobile layout blocks,
+    // each with their own burger button (CSS shows/hides whichever
+    // matches the screen width). Using querySelectorAll here -- instead
+    // of querySelector, which only grabs the first match -- ensures the
+    // click handler attaches to whichever copy is actually visible.
+    const burgerBtns = root.querySelectorAll(".header-burger-btn");
     const headerMenu = root.querySelector(".header-menu");
 
     function toggleOverlay() {
@@ -456,7 +461,7 @@ export default function SiteHeader() {
       }
       document.body.classList.toggle("sqs-menu-open", isOpen);
     }
-    burgerBtn?.addEventListener("click", toggleOverlay);
+    burgerBtns.forEach((btn) => btn.addEventListener("click", toggleOverlay));
 
     const triggers = root.querySelectorAll(".cse-dropdown-trigger");
     function openMobileFolder(e) {
@@ -475,7 +480,7 @@ export default function SiteHeader() {
     backButtons.forEach((b) => b.addEventListener("click", closeMobileFolder));
 
     return () => {
-      burgerBtn?.removeEventListener("click", toggleOverlay);
+      burgerBtns.forEach((btn) => btn.removeEventListener("click", toggleOverlay));
       triggers.forEach((t) => t.removeEventListener("click", openMobileFolder));
       backButtons.forEach((b) => b.removeEventListener("click", closeMobileFolder));
     };
