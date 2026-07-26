@@ -338,99 +338,117 @@ a {
 .bottom-bun {
   height: 1px !important;
 }
-/* Add this to the END of app/globals.css.
-   Styles the custom mobile menu overlay (replacing Squarespace's own
-   broken mobile overlay, which depended on unknown JS behavior). */
+/* Add this to the END of app/globals.css, REPLACING the earlier
+   .custom-mobile-menu block if you already added one -- this is a full
+   rewrite matching the real site's look (white background, black text,
+   chevrons, logo/close topbar) instead of the placeholder navy version. */
 
 .custom-mobile-menu {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: var(--accent, #22345a);
-  color: #fff;
+  background: #fff;
+  color: #000;
   display: flex;
   flex-direction: column;
-  padding: 24px 24px 40px;
+  padding: 20px 24px 40px;
   overflow-y: auto;
-  transform: translateX(100%);
-  transition: transform 0.25s ease;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
 }
 .custom-mobile-menu--open {
-  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
+.custom-mobile-menu-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.custom-mobile-menu-logo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  object-position: left;
+}
 .custom-mobile-menu-close {
-  align-self: flex-end;
   background: none;
   border: none;
-  color: #fff;
-  font-size: 32px;
+  color: #000;
+  font-size: 34px;
   line-height: 1;
   cursor: pointer;
-  padding: 8px;
-  margin-bottom: 16px;
+  padding: 4px 8px;
 }
 
 .custom-mobile-menu-nav {
   display: flex;
   flex-direction: column;
-  gap: 4px;
 }
 
 .custom-mobile-menu-link {
-  color: #fff;
+  color: #000 !important;
   text-decoration: none;
-  font-size: 18px;
-  font-weight: 600;
-  padding: 14px 4px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 30px;
+  font-weight: 400;
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
 }
 
 .custom-mobile-menu-group {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid #eee;
 }
 .custom-mobile-menu-group summary {
-  color: #fff;
-  font-size: 18px;
-  font-weight: 600;
-  padding: 14px 4px;
+  color: #000;
+  font-size: 30px;
+  font-weight: 400;
+  padding: 14px 0;
   cursor: pointer;
   list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .custom-mobile-menu-group summary::-webkit-details-marker {
   display: none;
 }
-.custom-mobile-menu-group summary::after {
-  content: "+";
-  float: right;
-  font-weight: 400;
+.custom-mobile-menu-chevron {
+  color: #999;
+  font-size: 26px;
+  transition: transform 0.15s ease;
 }
-.custom-mobile-menu-group[open] summary::after {
-  content: "\2212"; /* minus sign */
+.custom-mobile-menu-group[open] .custom-mobile-menu-chevron {
+  transform: rotate(90deg);
 }
 
 .custom-mobile-menu-sublist {
   display: flex;
   flex-direction: column;
-  padding: 0 0 12px 16px;
+  padding: 0 0 12px 4px;
 }
 .custom-mobile-menu-sublist a {
-  color: rgba(255, 255, 255, 0.85);
+  color: #333 !important;
   text-decoration: none;
-  font-size: 15.5px;
+  font-size: 18px;
   padding: 10px 4px;
 }
 
 .custom-mobile-menu-cta {
-  margin-top: 24px;
+  margin-top: 28px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  background: #fff;
-  color: var(--accent, #22345a) !important;
+  background: var(--accent, #22345a);
+  color: #fff !important;
   font-weight: 700;
+  font-size: 16px;
   text-decoration: none;
-  padding: 14px 26px;
+  padding: 15px 28px;
   border-radius: 100px;
 }
 
