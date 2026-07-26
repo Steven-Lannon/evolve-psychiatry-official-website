@@ -1,19 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
-// The header's rendered height doesn't actually change (no announcement
-// bar toggle on this site), so rather than measuring it dynamically --
-// which was unreliable, since it depends on external Squarespace
-// stylesheets finishing loading before the measurement runs -- this is
-// a fixed value matching the header's real height (announcement bar +
-// nav row). If the announcement bar is ever removed/added on the real
-// site, update this number to match.
-const HEADER_SPACER_HEIGHT = 140;
-
-// Real Squarespace header markup (desktop layout, mobile layout, mobile
-// overlay menu). Social icons intentionally omitted per request. Relies
-// on the real Squarespace stylesheets + body tweak classes for styling.
+// Real Squarespace header markup (desktop + mobile layout blocks) minus
+// Squarespace's own mobile overlay menu, which depended on JS/inline
+// styles we don't have and was rendering broken (see project history).
+// The mobile menu below is a simple, fully custom overlay instead --
+// same links, same rough styling, but zero dependency on unknown
+// Squarespace behavior, so it just works.
 const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink" style="
   --headerDropShadowColor: hsla(var(--black-hsl), 1);
   --headerBorderColor: hsla(var(--black-hsl), 1);
@@ -266,236 +260,145 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink
       </div>
     </div>
   </div>
-
-<div class="header-menu header-menu--folder-list" data-test="header-menu">
-  <div class="header-menu-bg theme-bg--primary"></div>
-  <div class="header-menu-nav">
-    <nav class="header-menu-nav-list">
-      <div data-folder="root" class="header-menu-nav-folder">
-        <div class="header-menu-nav-folder-content">
-          <div class="header-menu-nav-wrapper">
-            <div class="container header-menu-nav-item header-menu-nav-item--collection header-menu-nav-item--active header-menu-nav-item--homepage">
-              <a href="/" aria-current="page"><div class="header-menu-nav-item-content">Home</div></a>
-            </div>
-
-            <div class="container header-menu-nav-item">
-              <a data-folder-id="/services-folder/" href="/services-folder/" class="cse-dropdown-trigger" tabindex="0">
-                <div class="header-menu-nav-item-content header-menu-nav-item-content-folder">
-                  <span class="visually-hidden">Folder:</span>
-                  <span class="header-nav-folder-title-text">Services</span>
-                  <span class="header-dropdown-icon header-dropdown-flip"><svg viewBox="0 0 22 22"><use href="#openArrowHead"></use></svg></span>
-                </div>
-              </a>
-              <div data-folder="/services-folder/" class="header-menu-nav-folder cse-dropdown-content">
-                <div class="header-menu-nav-folder-content">
-                  <div class="header-menu-controls container header-menu-nav-item">
-                    <a class="header-menu-controls-control header-menu-controls-control--active" data-action="back" href="/" tabindex="-1">
-                      <span class="header-dropdown-icon header-dropdown-flip"><svg viewBox="0 0 22 22"><use href="#openArrowHead"></use></svg></span>
-                      <span>Back</span>
-                    </a>
-                  </div>
-                  <div class="container header-menu-nav-item"><a href="/medication-management" tabindex="-1"><div class="header-menu-nav-item-content">Medication Management</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/talk-therapy" tabindex="-1"><div class="header-menu-nav-item-content">Talk Therapy Counseling</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/tms" tabindex="-1"><div class="header-menu-nav-item-content">TMS Therapy</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/spravato" tabindex="-1"><div class="header-menu-nav-item-content">Spravato</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/telehealth" tabindex="-1"><div class="header-menu-nav-item-content">Telehealth Appointments</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/genesight" tabindex="-1"><div class="header-menu-nav-item-content">GeneSight Testing</div></a></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="container header-menu-nav-item">
-              <a data-folder-id="/clinicians-folder/" href="/clinicians-folder/" class="cse-dropdown-trigger" tabindex="0">
-                <div class="header-menu-nav-item-content header-menu-nav-item-content-folder">
-                  <span class="visually-hidden">Folder:</span>
-                  <span class="header-nav-folder-title-text">Clinicians</span>
-                  <span class="header-dropdown-icon header-dropdown-flip"><svg viewBox="0 0 22 22"><use href="#openArrowHead"></use></svg></span>
-                </div>
-              </a>
-              <div data-folder="/clinicians-folder/" class="header-menu-nav-folder cse-dropdown-content">
-                <div class="header-menu-nav-folder-content">
-                  <div class="header-menu-controls container header-menu-nav-item">
-                    <a class="header-menu-controls-control header-menu-controls-control--active" data-action="back" href="/" tabindex="-1">
-                      <span class="header-dropdown-icon header-dropdown-flip"><svg viewBox="0 0 22 22"><use href="#openArrowHead"></use></svg></span>
-                      <span>Back</span>
-                    </a>
-                  </div>
-                  <div class="container header-menu-nav-item"><a href="/prescribers" tabindex="-1"><div class="header-menu-nav-item-content">Our Prescribers</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/therapists" tabindex="-1"><div class="header-menu-nav-item-content">Our Therapists</div></a></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="container header-menu-nav-item">
-              <a data-folder-id="/locations-folder/" href="/locations-folder/" class="cse-dropdown-trigger" tabindex="0">
-                <div class="header-menu-nav-item-content header-menu-nav-item-content-folder">
-                  <span class="visually-hidden">Folder:</span>
-                  <span class="header-nav-folder-title-text">Locations</span>
-                  <span class="header-dropdown-icon header-dropdown-flip"><svg viewBox="0 0 22 22"><use href="#openArrowHead"></use></svg></span>
-                </div>
-              </a>
-              <div data-folder="/locations-folder/" class="header-menu-nav-folder cse-dropdown-content">
-                <div class="header-menu-nav-folder-content">
-                  <div class="header-menu-controls container header-menu-nav-item">
-                    <a class="header-menu-controls-control header-menu-controls-control--active" data-action="back" href="/" tabindex="-1">
-                      <span class="header-dropdown-icon header-dropdown-flip"><svg viewBox="0 0 22 22"><use href="#openArrowHead"></use></svg></span>
-                      <span>Back</span>
-                    </a>
-                  </div>
-                  <div class="container header-menu-nav-item"><a href="/albany" tabindex="-1"><div class="header-menu-nav-item-content">Albany, NY</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/garden-city" tabindex="-1"><div class="header-menu-nav-item-content">Garden City, NY</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/hauppauge" tabindex="-1"><div class="header-menu-nav-item-content">Hauppauge, NY</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/massapequa" tabindex="-1"><div class="header-menu-nav-item-content">Massapequa, NY</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/syosset" tabindex="-1"><div class="header-menu-nav-item-content">Syosset, NY</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/wilmington" tabindex="-1"><div class="header-menu-nav-item-content">Wilmington, NC</div></a></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="container header-menu-nav-item">
-              <a data-folder-id="/resources" href="/resources" class="cse-dropdown-trigger" tabindex="0">
-                <div class="header-menu-nav-item-content header-menu-nav-item-content-folder">
-                  <span class="visually-hidden">Folder:</span>
-                  <span class="header-nav-folder-title-text">Patient Resources</span>
-                  <span class="header-dropdown-icon header-dropdown-flip"><svg viewBox="0 0 22 22"><use href="#openArrowHead"></use></svg></span>
-                </div>
-              </a>
-              <div data-folder="/resources" class="header-menu-nav-folder cse-dropdown-content">
-                <div class="header-menu-nav-folder-content">
-                  <div class="header-menu-controls container header-menu-nav-item">
-                    <a class="header-menu-controls-control header-menu-controls-control--active" data-action="back" href="/" tabindex="-1">
-                      <span class="header-dropdown-icon header-dropdown-flip"><svg viewBox="0 0 22 22"><use href="#openArrowHead"></use></svg></span>
-                      <span>Back</span>
-                    </a>
-                  </div>
-                  <div class="container header-menu-nav-item"><a href="/new-patient" tabindex="-1"><div class="header-menu-nav-item-content">New Patient Registration</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/portal" tabindex="-1"><div class="header-menu-nav-item-content">Patient Portal</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/fullscript" tabindex="-1"><div class="header-menu-nav-item-content">Order Supplements</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/patient-scales-packet" tabindex="-1"><div class="header-menu-nav-item-content">Patient Scales</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/hipaa-release" tabindex="-1"><div class="header-menu-nav-item-content">HIPAA Release</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/prior-authorization" tabindex="-1"><div class="header-menu-nav-item-content">Prior Auth Request</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/testimonials" tabindex="-1"><div class="header-menu-nav-item-content">Testimonials</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/faq" tabindex="-1"><div class="header-menu-nav-item-content">FAQ</div></a></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="container header-menu-nav-item">
-              <a data-folder-id="/referrals-1" href="/referrals-1" class="cse-dropdown-trigger" tabindex="0">
-                <div class="header-menu-nav-item-content header-menu-nav-item-content-folder">
-                  <span class="visually-hidden">Folder:</span>
-                  <span class="header-nav-folder-title-text">Referrals</span>
-                  <span class="header-dropdown-icon header-dropdown-flip"><svg viewBox="0 0 22 22"><use href="#openArrowHead"></use></svg></span>
-                </div>
-              </a>
-              <div data-folder="/referrals-1" class="header-menu-nav-folder cse-dropdown-content">
-                <div class="header-menu-nav-folder-content">
-                  <div class="header-menu-controls container header-menu-nav-item">
-                    <a class="header-menu-controls-control header-menu-controls-control--active" data-action="back" href="/" tabindex="-1">
-                      <span class="header-dropdown-icon header-dropdown-flip"><svg viewBox="0 0 22 22"><use href="#openArrowHead"></use></svg></span>
-                      <span>Back</span>
-                    </a>
-                  </div>
-                  <div class="container header-menu-nav-item"><a href="/refer-patient" tabindex="-1"><div class="header-menu-nav-item-content">Refer A Patient</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/our-referrals" tabindex="-1"><div class="header-menu-nav-item-content">Our Referrals</div></a></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="container header-menu-nav-item">
-              <a data-folder-id="/billing" href="/billing" class="cse-dropdown-trigger" tabindex="0">
-                <div class="header-menu-nav-item-content header-menu-nav-item-content-folder">
-                  <span class="visually-hidden">Folder:</span>
-                  <span class="header-nav-folder-title-text">Billing</span>
-                  <span class="header-dropdown-icon header-dropdown-flip"><svg viewBox="0 0 22 22"><use href="#openArrowHead"></use></svg></span>
-                </div>
-              </a>
-              <div data-folder="/billing" class="header-menu-nav-folder cse-dropdown-content">
-                <div class="header-menu-nav-folder-content">
-                  <div class="header-menu-controls container header-menu-nav-item">
-                    <a class="header-menu-controls-control header-menu-controls-control--active" data-action="back" href="/" tabindex="-1">
-                      <span class="header-dropdown-icon header-dropdown-flip"><svg viewBox="0 0 22 22"><use href="#openArrowHead"></use></svg></span>
-                      <span>Back</span>
-                    </a>
-                  </div>
-                  <div class="container header-menu-nav-item"><a href="/insurances" tabindex="-1"><div class="header-menu-nav-item-content">Insurances &amp; Rates</div></a></div>
-                  <div class="container header-menu-nav-item"><a href="/update-insurance" tabindex="-1"><div class="header-menu-nav-item-content">Update Insurance</div></a></div>
-                  <div class="container header-menu-nav-item header-menu-nav-item--external"><a href="https://mycw197.ecwcloud.com/portal24839/jsp/100mp/login_otp.jsp" target="_blank" tabindex="-1">Make A Payment</a></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="container header-menu-nav-item header-menu-nav-item--collection"><a href="/about"><div class="header-menu-nav-item-content">About</div></a></div>
-            <div class="container header-menu-nav-item header-menu-nav-item--collection"><a href="/blog"><div class="header-menu-nav-item-content">Blog</div></a></div>
-            <div class="container header-menu-nav-item header-menu-nav-item--collection"><a href="/contact"><div class="header-menu-nav-item-content">Contact</div></a></div>
-          </div>
-        </div>
-      </div>
-    </nav>
-  </div>
-  <div class="header-menu-cta"><a class="theme-btn--primary btn sqs-button-element--secondary" href="/new-patient">Register Today</a></div>
-</div>
-
 </header>`;
+
+const NAV_LINKS = [
+  { label: "Home", href: "/" },
+  {
+    label: "Services",
+    children: [
+      { label: "Medication Management", href: "/medication-management" },
+      { label: "Talk Therapy Counseling", href: "/talk-therapy" },
+      { label: "TMS Therapy", href: "/tms" },
+      { label: "Spravato", href: "/spravato" },
+      { label: "Telehealth Appointments", href: "/telehealth" },
+      { label: "GeneSight Testing", href: "/genesight" },
+    ],
+  },
+  {
+    label: "Clinicians",
+    children: [
+      { label: "Our Prescribers", href: "/prescribers" },
+      { label: "Our Therapists", href: "/therapists" },
+    ],
+  },
+  {
+    label: "Locations",
+    children: [
+      { label: "Albany, NY", href: "/albany" },
+      { label: "Garden City, NY", href: "/garden-city" },
+      { label: "Hauppauge, NY", href: "/hauppauge" },
+      { label: "Massapequa, NY", href: "/massapequa" },
+      { label: "Syosset, NY", href: "/syosset" },
+      { label: "Wilmington, NC", href: "/wilmington" },
+    ],
+  },
+  {
+    label: "Patient Resources",
+    children: [
+      { label: "New Patient Registration", href: "/new-patient" },
+      { label: "Patient Portal", href: "/portal" },
+      { label: "Order Supplements", href: "/fullscript" },
+      { label: "Patient Scales", href: "/patient-scales-packet" },
+      { label: "HIPAA Release", href: "/hipaa-release" },
+      { label: "Prior Auth Request", href: "/prior-authorization" },
+      { label: "Testimonials", href: "/testimonials" },
+      { label: "FAQ", href: "/faq" },
+    ],
+  },
+  {
+    label: "Referrals",
+    children: [
+      { label: "Refer A Patient", href: "/refer-patient" },
+      { label: "Our Referrals", href: "/our-referrals" },
+    ],
+  },
+  {
+    label: "Billing",
+    children: [
+      { label: "Insurances & Rates", href: "/insurances" },
+      { label: "Update Insurance", href: "/update-insurance" },
+      {
+        label: "Make A Payment",
+        href: "https://mycw197.ecwcloud.com/portal24839/jsp/100mp/login_otp.jsp",
+        external: true,
+      },
+    ],
+  },
+  { label: "About", href: "/about" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact" },
+];
+
+function MobileMenu({ open, onClose }) {
+  return (
+    <div className={`custom-mobile-menu \${open ? "custom-mobile-menu--open" : ""}`}>
+      <button
+        className="custom-mobile-menu-close"
+        onClick={onClose}
+        aria-label="Close Menu"
+      >
+        &times;
+      </button>
+      <nav className="custom-mobile-menu-nav">
+        {NAV_LINKS.map((item) =>
+          item.children ? (
+            <details key={item.label} className="custom-mobile-menu-group">
+              <summary>{item.label}</summary>
+              <div className="custom-mobile-menu-sublist">
+                {item.children.map((child) => (
+                  <a
+                    key={child.label}
+                    href={child.href}
+                    target={child.external ? "_blank" : undefined}
+                    rel={child.external ? "noopener noreferrer" : undefined}
+                  >
+                    {child.label}
+                  </a>
+                ))}
+              </div>
+            </details>
+          ) : (
+            <a key={item.label} href={item.href} className="custom-mobile-menu-link">
+              {item.label}
+            </a>
+          )
+        )}
+        <a href="/new-patient" className="custom-mobile-menu-cta">
+          Register Today
+        </a>
+      </nav>
+    </div>
+  );
+}
 
 export default function SiteHeader() {
   const rootRef = useRef(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
 
-    const header = root.querySelector(".header");
-    // The header markup has separate desktop and mobile layout blocks,
-    // each with their own burger button (CSS shows/hides whichever
-    // matches the screen width). Using querySelectorAll here -- instead
-    // of querySelector, which only grabs the first match -- ensures the
-    // click handler attaches to whichever copy is actually visible.
+    // Both the desktop and mobile layout blocks have their own burger
+    // button (CSS shows/hides whichever matches the screen width), so
+    // attach to all matches rather than just the first.
     const burgerBtns = root.querySelectorAll(".header-burger-btn");
-    const headerMenu = root.querySelector(".header-menu");
-
-    function toggleOverlay() {
-      const isOpen = header.classList.toggle("header-menu-open");
-      if (headerMenu) {
-        // Squarespace's own CSS gates this panel's visibility on
-        // opacity/visibility (with a transition), expecting its own JS
-        // to flip those when opening. We don't have that JS, so set
-        // them directly here instead of just display.
-        headerMenu.style.display = isOpen ? "flex" : "";
-        headerMenu.style.opacity = isOpen ? "1" : "0";
-        headerMenu.style.visibility = isOpen ? "visible" : "hidden";
-      }
-      document.body.classList.toggle("sqs-menu-open", isOpen);
+    function openMenu() {
+      setMenuOpen(true);
     }
-    burgerBtns.forEach((btn) => btn.addEventListener("click", toggleOverlay));
-
-    const triggers = root.querySelectorAll(".cse-dropdown-trigger");
-    function openMobileFolder(e) {
-      e.preventDefault();
-      const content = e.currentTarget.nextElementSibling;
-      content?.classList.add("cse-dropdown-open");
-    }
-    triggers.forEach((t) => t.addEventListener("click", openMobileFolder));
-
-    const backButtons = root.querySelectorAll('[data-action="back"]');
-    function closeMobileFolder(e) {
-      e.preventDefault();
-      const content = e.currentTarget.closest(".cse-dropdown-content");
-      content?.classList.remove("cse-dropdown-open");
-    }
-    backButtons.forEach((b) => b.addEventListener("click", closeMobileFolder));
+    burgerBtns.forEach((btn) => btn.addEventListener("click", openMenu));
 
     return () => {
-      burgerBtns.forEach((btn) => btn.removeEventListener("click", toggleOverlay));
-      triggers.forEach((t) => t.removeEventListener("click", openMobileFolder));
-      backButtons.forEach((b) => b.removeEventListener("click", closeMobileFolder));
+      burgerBtns.forEach((btn) => btn.removeEventListener("click", openMenu));
     };
   }, []);
 
   return (
     <>
       <div ref={rootRef} dangerouslySetInnerHTML={{ __html: HEADER_HTML }} />
-      <div style={{ height: HEADER_SPACER_HEIGHT }} aria-hidden="true" />
+      <div style={{ height: 140 }} aria-hidden="true" />
+      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
     </>
   );
 }
