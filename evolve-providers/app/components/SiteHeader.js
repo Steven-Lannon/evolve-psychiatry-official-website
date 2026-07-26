@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Real Squarespace header markup (desktop layout, mobile layout, mobile
 // overlay menu). Social icons intentionally omitted per request. Relies
@@ -431,6 +431,7 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink
 
 export default function SiteHeader() {
   const rootRef = useRef(null);
+  const [headerHeight, setHeaderHeight] = useState(140);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -449,6 +450,22 @@ export default function SiteHeader() {
     }
     burgerBtn?.addEventListener("click", toggleOverlay);
 
+    // Since the header is position:fixed (tweak-fixed-header), it floats
+    // over page content instead of pushing it down. Measure its real
+    // height -- including the announcement bar -- and use it to size a
+    // spacer element rendered right after it, so page content underneath
+    // gets pushed down by exactly the right amount.
+    let resizeObserver;
+    if (header) {
+      setHeaderHeight(header.offsetHeight);
+      if ("ResizeObserver" in window) {
+        resizeObserver = new ResizeObserver(() => {
+          setHeaderHeight(header.offsetHeight);
+        });
+        resizeObserver.observe(header);
+      }
+    }
+
     const triggers = root.querySelectorAll(".cse-dropdown-trigger");
     function openMobileFolder(e) {
       e.preventDefault();
@@ -466,11 +483,17 @@ export default function SiteHeader() {
     backButtons.forEach((b) => b.addEventListener("click", closeMobileFolder));
 
     return () => {
+      resizeObserver?.disconnect();
       burgerBtn?.removeEventListener("click", toggleOverlay);
       triggers.forEach((t) => t.removeEventListener("click", openMobileFolder));
       backButtons.forEach((b) => b.removeEventListener("click", closeMobileFolder));
     };
   }, []);
 
-  return <div ref={rootRef} dangerouslySetInnerHTML={{ __html: HEADER_HTML }} />;
+  return (
+    <>
+      <div ref={rootRef} dangerouslySetInnerHTML={{ __html: HEADER_HTML }} />
+      <div style={{ height: headerHeight }} aria-hidden="true" />
+    </>
+  );
 }
