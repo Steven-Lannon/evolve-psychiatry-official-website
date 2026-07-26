@@ -322,3 +322,19 @@ a {
   width: 17px !important;
   height: 17px !important;
 }
+/* Add this to the END of app/globals.css (after everything already there,
+   including the breadcrumb fix block from before).
+
+   The mobile hamburger menu icon is built from three thin bar divs
+   (.top-bun, .patty, .bottom-bun) that are position:absolute with
+   top:0 and bottom:0 both set -- without an explicit height, that
+   combination stretches them to fill their entire container instead
+   of staying as 1px lines, which is what was rendering as a solid
+   black square. This rule was present in Squarespace's original
+   markup as an inline <style> tag but got lost during header cleanup. */
+
+.top-bun,
+.patty,
+.bottom-bun {
+  height: 1px !important;
+}
