@@ -2,10 +2,9 @@
 
 import { useEffect, useRef } from "react";
 
-// This is the REAL markup from evolvepsychiatry.com's Squarespace header,
-// copied verbatim (desktop layout, mobile layout, and the full-screen
-// mobile overlay menu). It relies on the real Squarespace stylesheet
-// (linked in layout.js) for all visual styling -- no guessed CSS here.
+// Real Squarespace header markup (desktop layout, mobile layout, mobile
+// overlay menu). Social icons intentionally omitted per request. Relies
+// on the real Squarespace stylesheets + body tweak classes for styling.
 const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink" style="
   --headerDropShadowColor: hsla(var(--black-hsl), 1);
   --headerBorderColor: hsla(var(--black-hsl), 1);
@@ -125,12 +124,6 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink
   </div>
 </div>
 <div class="header-actions header-actions--right">
-  <div class="header-actions-action header-actions-action--social">
-    <a class="icon icon--fill header-icon header-icon-border-shape-none header-icon-border-style-outline" href="https://www.instagram.com/evolve.psychiatry" target="_blank" aria-label="Instagram"><svg viewBox="23 23 64 64"><use xlink:href="#instagram-unauth-icon" width="110" height="110"></use></svg></a>
-    <a class="icon icon--fill header-icon header-icon-border-shape-none header-icon-border-style-outline" href="https://www.facebook.com/p/Evolve-Psychiatry-100054402074775/" target="_blank" aria-label="Facebook"><svg viewBox="23 23 64 64"><use xlink:href="#facebook-unauth-icon" width="110" height="110"></use></svg></a>
-    <a class="icon icon--fill header-icon header-icon-border-shape-none header-icon-border-style-outline" href="https://www.tiktok.com/@evolve.psychiatry" target="_blank" aria-label="TikTok"><svg viewBox="23 23 64 64"><use xlink:href="#tiktok-unauth-icon" width="110" height="110"></use></svg></a>
-    <a class="icon icon--fill header-icon header-icon-border-shape-none header-icon-border-style-outline" href="https://www.linkedin.com/company/evolvepsychiatry/" target="_blank" aria-label="LinkedIn"><svg viewBox="23 23 64 64"><use xlink:href="#linkedin-unauth-icon" width="110" height="110"></use></svg></a>
-  </div>
   <div class="header-actions-action header-actions-action--cta">
     <a class="btn btn--border theme-btn--primary-inverse sqs-button-element--secondary" href="/new-patient">Register Today</a>
   </div>
@@ -243,12 +236,6 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink
   </div>
 </div>
 <div class="header-actions header-actions--right">
-  <div class="header-actions-action header-actions-action--social">
-    <a class="icon icon--fill header-icon header-icon-border-shape-none header-icon-border-style-outline" href="https://www.instagram.com/evolve.psychiatry" target="_blank" aria-label="Instagram"><svg viewBox="23 23 64 64"><use xlink:href="#instagram-unauth-icon" width="110" height="110"></use></svg></a>
-    <a class="icon icon--fill header-icon header-icon-border-shape-none header-icon-border-style-outline" href="https://www.facebook.com/p/Evolve-Psychiatry-100054402074775/" target="_blank" aria-label="Facebook"><svg viewBox="23 23 64 64"><use xlink:href="#facebook-unauth-icon" width="110" height="110"></use></svg></a>
-    <a class="icon icon--fill header-icon header-icon-border-shape-none header-icon-border-style-outline" href="https://www.tiktok.com/@evolve.psychiatry" target="_blank" aria-label="TikTok"><svg viewBox="23 23 64 64"><use xlink:href="#tiktok-unauth-icon" width="110" height="110"></use></svg></a>
-    <a class="icon icon--fill header-icon header-icon-border-shape-none header-icon-border-style-outline" href="https://www.linkedin.com/company/evolvepsychiatry/" target="_blank" aria-label="LinkedIn"><svg viewBox="23 23 64 64"><use xlink:href="#linkedin-unauth-icon" width="110" height="110"></use></svg></a>
-  </div>
   <div class="header-actions-action header-actions-action--cta">
     <a class="btn btn--border theme-btn--primary-inverse sqs-button-element--secondary" href="/new-patient">Register Today</a>
   </div>
@@ -437,12 +424,6 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink
       </div>
     </nav>
   </div>
-  <div class="header-menu-actions social-accounts">
-    <div class="header-menu-actions-action header-menu-actions-action--social mobile"><a class="icon icon--lg icon--fill header-icon header-icon-border-shape-none header-icon-border-style-outline" href="https://www.instagram.com/evolve.psychiatry" target="_blank" aria-label="Instagram"><svg viewBox="23 23 64 64"><use xlink:href="#instagram-unauth-icon" width="110" height="110"></use></svg></a></div>
-    <div class="header-menu-actions-action header-menu-actions-action--social mobile"><a class="icon icon--lg icon--fill header-icon header-icon-border-shape-none header-icon-border-style-outline" href="https://www.facebook.com/p/Evolve-Psychiatry-100054402074775/" target="_blank" aria-label="Facebook"><svg viewBox="23 23 64 64"><use xlink:href="#facebook-unauth-icon" width="110" height="110"></use></svg></a></div>
-    <div class="header-menu-actions-action header-menu-actions-action--social mobile"><a class="icon icon--lg icon--fill header-icon header-icon-border-shape-none header-icon-border-style-outline" href="https://www.tiktok.com/@evolve.psychiatry" target="_blank" aria-label="TikTok"><svg viewBox="23 23 64 64"><use xlink:href="#tiktok-unauth-icon" width="110" height="110"></use></svg></a></div>
-    <div class="header-menu-actions-action header-menu-actions-action--social mobile"><a class="icon icon--lg icon--fill header-icon header-icon-border-shape-none header-icon-border-style-outline" href="https://www.linkedin.com/company/evolvepsychiatry/" target="_blank" aria-label="LinkedIn"><svg viewBox="23 23 64 64"><use xlink:href="#linkedin-unauth-icon" width="110" height="110"></use></svg></a></div>
-  </div>
   <div class="header-menu-cta"><a class="theme-btn--primary btn sqs-button-element--secondary" href="/new-patient">Register Today</a></div>
 </div>
 
@@ -459,7 +440,6 @@ export default function SiteHeader() {
     const burgerBtn = root.querySelector(".header-burger-btn");
     const headerMenu = root.querySelector(".header-menu");
 
-    // --- Burger button: open/close the full-screen mobile overlay menu ---
     function toggleOverlay() {
       const isOpen = header.classList.toggle("header-menu-open");
       if (headerMenu) {
@@ -469,10 +449,6 @@ export default function SiteHeader() {
     }
     burgerBtn?.addEventListener("click", toggleOverlay);
 
-    // --- Desktop folder dropdowns (Services, Clinicians, etc.) ---
-    // Squarespace normally shows these on hover via CSS. If your real
-    // stylesheet does that already, this is a no-op safety net for
-    // keyboard/click users; it just toggles a class the CSS can key off.
     const desktopFolderButtons = root.querySelectorAll(
       ".header-display-desktop .header-nav-folder-title"
     );
@@ -484,7 +460,6 @@ export default function SiteHeader() {
       btn.addEventListener("click", toggleDesktopFolder)
     );
 
-    // --- Mobile overlay: folder drill-down (Services > list, then Back) ---
     const triggers = root.querySelectorAll(".cse-dropdown-trigger");
     function openMobileFolder(e) {
       e.preventDefault();
