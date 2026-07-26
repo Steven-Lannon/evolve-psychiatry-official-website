@@ -332,7 +332,7 @@ const NAV_LINKS = [
 
 function MobileMenu({ open, onClose }) {
   return (
-    <div className={`custom-mobile-menu \${open ? "custom-mobile-menu--open" : ""}`}>
+    <div className={`custom-mobile-menu ${open ? "custom-mobile-menu--open" : ""}`}>
       <button
         className="custom-mobile-menu-close"
         onClick={onClose}
