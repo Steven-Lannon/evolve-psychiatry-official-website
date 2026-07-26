@@ -277,3 +277,49 @@ a {
   color: var(--accent);
   font-weight: 600;
 }
+/* Add this block to the END of app/globals.css.
+   Squarespace's imported site.css targets plain, unscoped tags (a, svg,
+   nav) broadly for its own theme. Since our breadcrumb/back-button use
+   plain tags with no Squarespace scoping classes, some of those generic
+   rules were leaking through -- overriding fill="none" on the arrow icon
+   (turning it into a solid block) and the text color (making it
+   invisible). These !important rules guarantee our own design always
+   wins here, regardless of what site.css does elsewhere. */
+
+.breadcrumb-nav,
+.breadcrumb-nav a,
+.breadcrumb-nav span,
+.breadcrumb-current {
+  color: var(--muted) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  background: none !important;
+}
+.breadcrumb-current {
+  color: var(--ink) !important;
+}
+
+.cta-secondary,
+.cta-primary {
+  color: var(--accent) !important;
+  background: transparent !important;
+  text-decoration: none !important;
+}
+.cta-primary {
+  color: #fff !important;
+  background: var(--accent) !important;
+}
+
+.cta-secondary svg,
+.cta-primary svg {
+  fill: none !important;
+  stroke: currentColor !important;
+  width: 16px !important;
+  height: 16px !important;
+}
+.cta-primary svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+
