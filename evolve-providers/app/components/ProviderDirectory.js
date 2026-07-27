@@ -171,7 +171,7 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
         <div className="wrap">
           <h1>{heading}</h1>
           {crossLink && (
-            <p className="scope-line" style={{ marginBottom: 18 }}>
+            <p className="type-cross-link">
               {crossLink.text}{" "}
               <a href={crossLink.href}>
                 <strong>{crossLink.linkText}</strong>
