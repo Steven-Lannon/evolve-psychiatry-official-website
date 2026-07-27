@@ -24,7 +24,7 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
   display: grid;
   position: relative;
   grid-area: 1/1/-1/-1;
-  grid-template-rows: repeat(30,minmax(24px, auto));
+  grid-template-rows: repeat(22,minmax(24px, auto));
   grid-template-columns:
     minmax(var(--grid-gutter), 1fr)
     repeat(8, minmax(0, var(--cell-max-width)))
@@ -117,7 +117,7 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
 }
 
 .fe-block-footer-copyright {
-  grid-area: 28/2/31/10;
+  grid-area: 20/2/22/10;
   z-index: 8;
 }
 .fe-block-footer-copyright .sqs-block { justify-content: center; }
@@ -126,6 +126,9 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
   .fe-block-footer-copyright { grid-area: 10/4/11/24; z-index: 8; }
   .fe-block-footer-copyright .sqs-block { justify-content: center; }
   .fe-block-footer-copyright .sqs-block-alignment-wrapper { align-items: center; }
+}
+#footer-sections a {
+  text-decoration: underline;
 }
 
 </style>
@@ -137,7 +140,7 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
                   <img
                     src="https://images.squarespace-cdn.com/content/v1/6525fe2f00c9de2ec400ea4f/3f762257-df88-44be-a5e6-11f8c47a9aae/evolve-logo-lighter-blue-gray.png"
                     alt="Evolve Psychiatry"
-                    style="display:block;width:100%;height:auto;object-fit:contain"
+                    style="display:block;max-width:120px;width:100%;height:auto;object-fit:contain;margin:0 auto"
                   />
                 </a>
               </div>
