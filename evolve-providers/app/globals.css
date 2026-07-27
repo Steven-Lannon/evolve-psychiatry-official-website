@@ -1401,7 +1401,7 @@ a {
   padding: 12px 22px;
   border: none;
   border-radius: 100px;
-  background: var(--accent);
+  background: var(--ink);
   color: #fff !important;
   font-size: 14px;
   font-weight: 600 !important;
@@ -1419,7 +1419,7 @@ a {
   pointer-events: auto;
 }
 .pd-widget .scroll-top-btn:hover {
-  background: #16223c;
+  background: #0F1A20;
 }
 .pd-widget .scroll-top-btn svg {
   width: 18px;
