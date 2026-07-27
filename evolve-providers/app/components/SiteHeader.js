@@ -390,17 +390,19 @@ export default function SiteHeader() {
     const root = rootRef.current;
     if (!root) return;
 
-    // Both the desktop and mobile layout blocks have their own burger
-    // button (CSS shows/hides whichever matches the screen width), so
-    // attach to all matches rather than just the first.
-    const burgerBtns = root.querySelectorAll(".header-burger-btn");
-    function openMenu() {
-      setMenuOpen(true);
+    // Using event delegation on document (rather than attaching directly
+    // to each burger button) so the handler can't get silently detached
+    // if anything ever touches/replaces those specific button nodes --
+    // this listener lives on document for the component's whole lifetime.
+    function handleDocumentClick(e) {
+      if (e.target.closest(".header-burger-btn")) {
+        setMenuOpen(true);
+      }
     }
-    burgerBtns.forEach((btn) => btn.addEventListener("click", openMenu));
+    document.addEventListener("click", handleDocumentClick);
 
     return () => {
-      burgerBtns.forEach((btn) => btn.removeEventListener("click", openMenu));
+      document.removeEventListener("click", handleDocumentClick);
     };
   }, []);
 
