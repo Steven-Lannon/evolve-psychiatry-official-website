@@ -36,7 +36,7 @@ a {
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
-  font-size: 20px;
+  font-size: 17px;
   color: var(--muted);
   margin-bottom: 20px;
 }
@@ -293,7 +293,7 @@ a {
 .breadcrumb-nav span,
 .breadcrumb-current {
   color: var(--muted) !important;
-  font-size: 20px !important;
+  font-size: 17px !important;
   font-weight: 600 !important;
   text-decoration: none !important;
   background: none !important;
