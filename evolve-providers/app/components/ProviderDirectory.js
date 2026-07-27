@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useSearchParams } from "next/navigation";
 
 // Your spreadsheet's Location column just has the city name (e.g. "Albany").
@@ -54,11 +55,16 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
   const [query, setQuery] = useState("");
   const [activeLocation, setActiveLocation] = useState("All");
   const [activeSex, setActiveSex] = useState("All");
-  const [biosVisible, setBiosVisible] = useState(true);
+  const [biosVisible, setBiosVisible] = useState(false);
   const [lightboxSrc, setLightboxSrc] = useState(null);
   const [lightboxAlt, setLightboxAlt] = useState("");
   const [scrollBtnVisible, setScrollBtnVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Deep-linking support: /prescribers?location=Albany&sex=Female&q=smith
   useEffect(() => {
@@ -410,6 +416,13 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
                           )}
                         </div>
                       )}
+                      {p.slug && (
+                        <div className="profile-link-row">
+                          <a className="profile-link-btn" href={`/${p.slug}`}>
+                            View Full Profile
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
@@ -419,12 +432,14 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
         </div>
       </div>
 
-      {lightboxSrc && (
-        <div className="photo-lightbox open" onClick={() => setLightboxSrc(null)}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={lightboxSrc} alt={lightboxAlt} />
-        </div>
-      )}
+      {mounted && lightboxSrc &&
+        createPortal(
+          <div className="pd-photo-lightbox open" onClick={() => setLightboxSrc(null)}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={lightboxSrc} alt={lightboxAlt} />
+          </div>,
+          document.body
+        )}
 
       <button
         type="button"
