@@ -897,24 +897,22 @@ a {
 
 .pd-widget .scroll-top-btn {
   position: fixed;
-  left: 50%;
+  right: 24px;
   bottom: 24px;
   z-index: 1050;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 22px;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
   border: none;
-  border-radius: 100px;
-  background: var(--accent);
+  border-radius: 50%;
+  background: var(--ink);
   color: #fff !important;
-  font-size: 14px;
-  font-weight: 600 !important;
-  white-space: nowrap;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(28, 43, 51, 0.25);
+  box-shadow: 0 4px 14px rgba(28, 43, 51, 0.3);
   opacity: 0;
-  transform: translate(-50%, 12px);
+  transform: translateY(12px);
   pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s ease;
 }
