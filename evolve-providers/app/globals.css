@@ -938,3 +938,482 @@ a {
     font-size: 13px;
   }
 }
+/* Add this to the END of app/globals.css.
+   Styles for the /prescribers and /therapists directory pages. Scoped
+   under .pd-widget (matching the original widget's own scoping) so
+   nothing here collides with the individual profile page's .wrap,
+   .card, .bio-text, .photo-lightbox etc. classes already defined above. */
+
+.pd-widget {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  color: var(--ink) !important;
+}
+.pd-widget * {
+  box-sizing: border-box;
+}
+.pd-widget .page-bg {
+  background: var(--bg) !important;
+}
+.pd-widget .wrap {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+.pd-widget h1 {
+  font-size: 32px;
+  font-weight: 700 !important;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.01em;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+}
+.pd-widget .scope-line {
+  color: var(--ink) !important;
+  font-size: 17px;
+  font-weight: 500 !important;
+  margin: 0 0 14px 0;
+}
+.pd-widget .scope-line strong {
+  color: var(--ink) !important;
+  font-weight: 700 !important;
+}
+.pd-widget .scope-line .scope-count {
+  color: var(--muted) !important;
+  font-weight: 600 !important;
+  font-size: 15px;
+}
+
+.pd-widget .controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.pd-widget .search-bar {
+  position: relative;
+  flex: 1 1 420px;
+  max-width: 520px;
+}
+.pd-widget .search-bar input {
+  width: 100%;
+  padding: 14px 44px 14px 16px;
+  font-size: 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--ink) !important;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.pd-widget .search-bar input:focus {
+  border-color: var(--accent);
+}
+.pd-widget .search-bar svg {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: var(--muted) !important;
+  pointer-events: none;
+}
+
+.pd-widget .results {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .pd-widget .results {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .pd-widget .results {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pd-widget .filter-group.location-select-group {
+  display: none;
+}
+@media (max-width: 640px) {
+  .pd-widget .filter-group.location-buttons-group {
+    display: none;
+  }
+  .pd-widget .filter-group.location-select-group {
+    display: flex;
+  }
+}
+
+.pd-widget .card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.pd-widget .card:hover {
+  border-color: #c7d2d2;
+  box-shadow: 0 4px 16px rgba(28, 43, 51, 0.06);
+}
+.pd-widget .card .card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.pd-widget .card .photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--accent-soft);
+  cursor: zoom-in;
+}
+.pd-widget .card .photo-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent) !important;
+  font-weight: 700 !important;
+  font-size: 34px;
+  cursor: default;
+}
+.pd-widget .card .card-heading {
+  min-width: 0;
+}
+.pd-widget .card .location-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 600 !important;
+  color: var(--accent) !important;
+  background: var(--accent-soft);
+  padding: 2px 9px;
+  border-radius: 100px;
+  margin-top: 3px;
+}
+.pd-widget .card .location-badge svg {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+}
+
+.pd-photo-lightbox {
+  display: none !important;
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(28, 43, 51, 0.75);
+  z-index: 2147483000 !important;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  cursor: zoom-out;
+  margin: 0 !important;
+}
+.pd-photo-lightbox.open {
+  display: flex !important;
+}
+.pd-photo-lightbox img {
+  max-width: min(420px, 90vw) !important;
+  max-height: 80vh !important;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  object-fit: cover;
+  margin: 0 !important;
+}
+
+.pd-widget .card .card-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.pd-widget .card .fields {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 400 !important;
+  color: var(--muted) !important;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.pd-widget .card .fields span b {
+  color: var(--ink) !important;
+  font-weight: 600 !important;
+}
+.pd-widget .card .profile-link-row {
+  margin-top: 10px;
+}
+.pd-widget .card .profile-link-btn {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600 !important;
+  color: #fff !important;
+  background: var(--accent);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 100px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.pd-widget .card .profile-link-btn:hover {
+  background: #16223c;
+  color: #fff !important;
+}
+.pd-widget .card .name {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 700 !important;
+  color: var(--ink) !important;
+  line-height: 1.3;
+}
+.pd-widget .card .new-patients-closed {
+  font-size: 12.5px;
+  font-weight: 600 !important;
+  color: #b3402a !important;
+  margin: 8px 0 0 0;
+}
+.pd-widget .card .new-patients-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700 !important;
+  color: #1f6b49 !important;
+  background: #e4f3ec;
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin: 8px 0 0 0;
+}
+.pd-widget .card .new-patients-open svg {
+  width: 12px;
+  height: 13px;
+  flex-shrink: 0;
+}
+.pd-widget .card .telehealth-note {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 400 !important;
+  color: var(--muted) !important;
+  margin: 8px 0 0 0;
+}
+.pd-widget .card .telehealth-note svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+.pd-widget .card .bio {
+  padding-top: 10px;
+  font-size: 13px;
+  font-weight: 400 !important;
+  line-height: 1.5;
+  color: var(--muted) !important;
+}
+.pd-widget .card .bio-text {
+  margin: 0 0 10px 0;
+}
+
+.pd-widget .bio-global-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 10px;
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+  cursor: pointer;
+  vertical-align: middle;
+  font-family: inherit;
+}
+.pd-widget .bio-global-toggle-track {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 100px;
+  background: var(--line);
+  transition: background 0.15s ease;
+}
+.pd-widget .bio-global-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease;
+}
+.pd-widget .bio-global-toggle[aria-pressed="true"] .bio-global-toggle-track {
+  background: var(--accent);
+}
+.pd-widget .bio-global-toggle[aria-pressed="true"] .bio-global-toggle-thumb {
+  transform: translateX(14px);
+}
+
+.pd-widget mark {
+  background: var(--accent-soft);
+  color: var(--accent) !important;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+.pd-widget .empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted) !important;
+  font-size: 14px;
+}
+
+.pd-widget .reset-btn {
+  border: none;
+  background: none;
+  color: #c0392b !important;
+  font-size: 13px;
+  font-weight: 600 !important;
+  cursor: pointer;
+  padding: 6px 4px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.pd-widget .reset-btn:hover {
+  color: #8e2a20 !important;
+}
+
+.pd-widget .filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+.pd-widget .filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pd-widget .filter-label {
+  font-size: 12px;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted) !important;
+}
+.pd-widget .filter-btn {
+  border: 1.5px solid var(--line);
+  background: var(--card);
+  color: var(--ink) !important;
+  font-size: 13px;
+  font-weight: 600 !important;
+  padding: 6px 14px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.pd-widget .filter-btn:hover {
+  border-color: var(--accent);
+}
+.pd-widget .filter-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff !important;
+}
+.pd-widget .filter-select {
+  border: 1.5px solid var(--line);
+  background: var(--card);
+  color: var(--ink) !important;
+  font-size: 13px;
+  font-weight: 600 !important;
+  padding: 6px 30px 6px 14px;
+  border-radius: 100px;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B6B72' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+}
+.pd-widget .filter-select:focus {
+  border-color: var(--accent);
+}
+.pd-widget .select-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.pd-widget .select-wrap svg {
+  position: absolute;
+  left: 12px;
+  width: 14px;
+  height: 14px;
+  color: var(--muted) !important;
+  pointer-events: none;
+}
+.pd-widget .select-wrap .filter-select {
+  padding-left: 34px;
+}
+
+.pd-widget .scroll-top-btn {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 1050;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 100px;
+  background: var(--accent);
+  color: #fff !important;
+  font-size: 14px;
+  font-weight: 600 !important;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(28, 43, 51, 0.25);
+  opacity: 0;
+  transform: translate(-50%, 12px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s ease;
+}
+.pd-widget .scroll-top-btn.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+.pd-widget .scroll-top-btn:hover {
+  background: #16223c;
+}
+.pd-widget .scroll-top-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+@media (max-width: 600px) {
+  .pd-widget .scroll-top-btn {
+    bottom: 16px;
+    padding: 10px 18px;
+    font-size: 13px;
+  }
+}
