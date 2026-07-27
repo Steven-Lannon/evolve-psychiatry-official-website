@@ -312,6 +312,11 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
                 const acceptingNew = /^yes$/i.test((p["New Patients"] || "").trim());
                 const isRemote = /^remote$/i.test(locationVal);
 
+                const locationPageHref =
+                  locationVal && !isRemote
+                    ? `/${locationVal.trim().toLowerCase().replace(/\s+/g, "-")}`
+                    : "";
+
                 // The original widget showed every other sheet column
                 // (Sex, NPI, Age Range, Suite) as a generic "fields" list
                 // on each card -- Type is skipped here since the page is
@@ -352,17 +357,31 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
                           dangerouslySetInnerHTML={{ __html: highlight(name, query) }}
                         />
                         {locationVal && (
-                          <span className="location-badge">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z" />
-                              <circle cx="12" cy="9.5" r="2.5" />
-                            </svg>
-                            <span
-                              dangerouslySetInnerHTML={{
-                                __html: highlight(formatLocation(locationVal), query),
-                              }}
-                            />
-                          </span>
+                          locationPageHref ? (
+                            <a href={locationPageHref} className="location-badge">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z" />
+                                <circle cx="12" cy="9.5" r="2.5" />
+                              </svg>
+                              <span
+                                dangerouslySetInnerHTML={{
+                                  __html: highlight(formatLocation(locationVal), query),
+                                }}
+                              />
+                            </a>
+                          ) : (
+                            <span className="location-badge">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z" />
+                                <circle cx="12" cy="9.5" r="2.5" />
+                              </svg>
+                              <span
+                                dangerouslySetInnerHTML={{
+                                  __html: highlight(formatLocation(locationVal), query),
+                                }}
+                              />
+                            </span>
+                          )
                         )}
                       </div>
                     </div>
