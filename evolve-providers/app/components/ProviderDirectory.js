@@ -306,6 +306,17 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
                 const acceptingNew = /^yes$/i.test((p["New Patients"] || "").trim());
                 const isRemote = /^remote$/i.test(locationVal);
 
+                // The original widget showed every other sheet column
+                // (Sex, NPI, Age Range, Suite) as a generic "fields" list
+                // on each card -- Type is skipped here since the page is
+                // already filtered to one type, making it redundant.
+                const extraFields = [
+                  ["Sex", p.Sex],
+                  ["NPI", p.NPI],
+                  ["Age Range", p["Age Range"]],
+                  ["Suite", p.Suite],
+                ].filter(([, val]) => val && String(val).trim());
+
                 const photoAlt = [name, typeLabel, locationVal ? `in ${formatLocation(locationVal)}` : ""]
                   .filter(Boolean)
                   .join(", ");
@@ -373,6 +384,20 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
                           {notAcceptingAny
                             ? "Currently not accepting any patients."
                             : "Currently not accepting new patients."}
+                        </div>
+                      )}
+                      {extraFields.length > 0 && (
+                        <div className="fields">
+                          {extraFields.map(([label, val]) => (
+                            <span key={label}>
+                              <b>{label}:</b>{" "}
+                              <span
+                                dangerouslySetInnerHTML={{
+                                  __html: highlight(String(val).trim(), query),
+                                }}
+                              />
+                            </span>
+                          ))}
                         </div>
                       )}
                       {bioText && (
