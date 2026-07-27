@@ -1,5 +1,6 @@
 import "./globals.css";
 import SiteHeader from "./components/SiteHeader";
+import SiteFooter from "./components/SiteFooter";
 
 export const metadata = {
   metadataBase: new URL("https://evolvepsychiatry.com"),
@@ -78,6 +79,7 @@ export default function RootLayout({ children }) {
       <body className={SQSP_BODY_CLASS}>
         <SiteHeader />
         {children}
+        <SiteFooter />
       </body>
     </html>
   );
