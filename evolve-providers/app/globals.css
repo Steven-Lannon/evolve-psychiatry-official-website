@@ -1143,7 +1143,7 @@ a {
 .pd-widget .card .fields {
   display: flex !important;
   flex-direction: column !important;
-  gap: 5px;
+  gap: 11px;
   font-size: 13px;
   font-weight: 400 !important;
   color: var(--muted) !important;
@@ -1166,7 +1166,7 @@ a {
   color: #fff !important;
   background: var(--accent);
   text-decoration: none;
-  padding: 6px 14px;
+  padding: 12px 24px;
   border-radius: 100px;
   transition: background 0.15s ease, color 0.15s ease;
 }
@@ -1416,4 +1416,22 @@ a {
     padding: 10px 18px;
     font-size: 13px;
   }
+}
+
+/* Hardened, extra-specific color fix: field values and bio text were
+   rendering in an accent blue instead of the intended muted gray,
+   despite the color already being set higher up with !important --
+   Squarespace's site.css has its own !important rules that can win a
+   cascade tie by loading later. Placing this block at the very end of
+   the file (and targeting the exact rendered elements directly) gives
+   it the tie-break advantage instead. */
+.pd-widget .card .fields span {
+  color: var(--muted) !important;
+}
+.pd-widget .card .fields span b {
+  color: var(--ink) !important;
+}
+.pd-widget .card .bio-text {
+  color: var(--muted) !important;
+  font-size: 13px !important;
 }
