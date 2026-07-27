@@ -10,6 +10,9 @@
 
 const FOOTER_HTML = `<footer class="sections" id="footer-sections">
   <section data-section-theme="dark" class="page-section full-bleed-section background-width--full-bleed content-width--wide horizontal-alignment--center vertical-alignment--top dark">
+    <div class="section-border">
+      <div class="section-background"></div>
+    </div>
     <div class="content-wrapper">
       <div class="content">
         <div data-fluid-engine="true">
