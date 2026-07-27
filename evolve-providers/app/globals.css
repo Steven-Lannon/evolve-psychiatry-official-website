@@ -918,22 +918,27 @@ a {
 }
 .pd-widget .scroll-top-btn.visible {
   opacity: 1;
-  transform: translate(-50%, 0);
+  transform: translateY(0);
   pointer-events: auto;
 }
 .pd-widget .scroll-top-btn:hover {
-  background: #16223c;
+  background: #0F1A20;
 }
 .pd-widget .scroll-top-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
 }
 @media (max-width: 600px) {
   .pd-widget .scroll-top-btn {
+    right: 16px;
     bottom: 16px;
-    padding: 10px 18px;
-    font-size: 13px;
+    width: 42px;
+    height: 42px;
+  }
+  .pd-widget .scroll-top-btn svg {
+    width: 18px;
+    height: 18px;
   }
 }
 /* Add this to the END of app/globals.css.
