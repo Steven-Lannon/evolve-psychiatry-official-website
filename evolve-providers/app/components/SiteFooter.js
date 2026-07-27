@@ -127,6 +127,15 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
   .fe-block-footer-copyright .sqs-block { justify-content: center; }
   .fe-block-footer-copyright .sqs-block-alignment-wrapper { align-items: center; }
 }
+.fe-block-footer-logo img {
+  max-width: 60px;
+}
+@media (min-width: 768px) {
+  .fe-block-footer-logo img {
+    max-width: 90px;
+  }
+}
+
 #footer-sections a {
   text-decoration: underline;
 }
@@ -140,7 +149,7 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
                   <img
                     src="https://images.squarespace-cdn.com/content/v1/6525fe2f00c9de2ec400ea4f/3f762257-df88-44be-a5e6-11f8c47a9aae/evolve-logo-lighter-blue-gray.png"
                     alt="Evolve Psychiatry"
-                    style="display:block;max-width:120px;width:100%;height:auto;object-fit:contain;margin:0 auto"
+                    style="display:block;width:100%;height:auto;object-fit:contain;margin:0 auto"
                   />
                 </a>
               </div>
