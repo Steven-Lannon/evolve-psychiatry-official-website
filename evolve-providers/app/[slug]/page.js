@@ -14,6 +14,7 @@ import {
   StethoscopeIcon,
   ChatIcon,
 } from "../../lib/icons";
+import ClickableProfilePhoto from "../components/ClickableProfilePhoto";
 
 // Tells Next.js which slugs exist at build time, so every provider page
 // is pre-rendered as real static HTML — bio and all — before anyone
@@ -135,6 +136,10 @@ export default async function ProviderPage({ params }) {
   if (npiVal) facts.push(["NPI", npiVal]);
   if (ageRangeVal) facts.push(["Age Range", ageRangeVal]);
 
+  const photoAlt = `${displayName}${typeVal ? `, ${typeVal}` : ""}${
+    locationVal ? ` in ${formatLocation(locationVal)}` : ""
+  }`;
+
   const physicianJsonLd = {
     "@context": "https://schema.org",
     "@type": "Physician",
@@ -202,24 +207,6 @@ export default async function ProviderPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      <a
-        href={backHref}
-        className="cta-secondary"
-        style={{ marginBottom: "16px", display: "inline-flex" }}
-      >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <polyline points="15 18 9 12 15 6" />
-        </svg>
-        Back to {backLabel}
-      </a>
-
       <nav className="breadcrumb-nav" aria-label="Breadcrumb">
         <a href="/clinicians">All Clinicians</a>
         <span className="breadcrumb-sep">/</span>
@@ -230,21 +217,11 @@ export default async function ProviderPage({ params }) {
 
       <div className="profile-card">
         <div className="profile-header">
-          {photoVal ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              className="profile-photo"
-              src={photoVal}
-              alt={`${displayName}${typeVal ? `, ${typeVal}` : ""}${
-                locationVal ? ` in ${formatLocation(locationVal)}` : ""
-              }`}
-              loading="lazy"
-            />
-          ) : (
-            <div className="profile-photo profile-photo-initials">
-              {initials || "?"}
-            </div>
-          )}
+          <ClickableProfilePhoto
+            photoVal={photoVal}
+            alt={photoAlt}
+            initials={initials}
+          />
           <div className="profile-heading">
             <h1>{displayName}</h1>
             <div className="badge-row">
