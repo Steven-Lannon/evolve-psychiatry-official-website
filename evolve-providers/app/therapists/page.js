@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { getAllProviders } from "../../lib/sheets";
+import { getAccurateRole } from "../../lib/roles";
 import ProviderDirectory from "../components/ProviderDirectory";
 
 export const revalidate = 3600;
@@ -25,7 +26,11 @@ export default async function TherapistsPage() {
       .map((p, i) => {
         const name = `${p["First Name"] || ""} ${p["Last Name"] || ""}`.trim();
         if (!name) return null;
-        const physician = { "@type": "Physician", name, jobTitle: "Therapist" };
+        const physician = {
+          "@type": "Physician",
+          name,
+          jobTitle: getAccurateRole(p.Type, p.Title),
+        };
         if (p.Title) physician.honorificSuffix = p.Title.trim();
         if (p["Photo URL"]) physician.image = p["Photo URL"].trim();
         if (p.NPI) {
