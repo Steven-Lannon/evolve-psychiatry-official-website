@@ -15,26 +15,7 @@ import {
   ChatIcon,
 } from "../../lib/icons";
 import ClickableProfilePhoto from "../components/ClickableProfilePhoto";
-
-// Returns an accurate professional role description based on both Type
-// AND credential (Title) -- not just Type alone. "Psychiatrist" only
-// applies to MD/DO; a PMHNP or PA-C prescriber is not a psychiatrist by
-// definition, even though they prescribe in a psychiatric practice.
-// Used for the visible on-page subtitle and structured data jobTitle --
-// NOT for the <title> tag/metadata, which keeps its own simpler wording.
-function getAccurateRole(typeVal, titleVal) {
-  const credential = (titleVal || "").trim().toUpperCase();
-  if (/^prescriber$/i.test(typeVal)) {
-    if (/^(MD|DO)$/.test(credential)) return "Psychiatrist";
-    if (/^(PMHNP|PMHNP-BC|PMHNP-C|NP)$/.test(credential)) {
-      return "Psychiatric Nurse Practitioner";
-    }
-    if (/^(PA|PA-C)$/.test(credential)) return "Psychiatric Physician Assistant";
-    return "Psychiatric Prescriber";
-  }
-  if (/^therapist$/i.test(typeVal)) return "Therapist";
-  return typeVal || "Clinician";
-}
+import { getAccurateRole } from "../../lib/roles";
 
 
 // Tells Next.js which slugs exist at build time, so every provider page
