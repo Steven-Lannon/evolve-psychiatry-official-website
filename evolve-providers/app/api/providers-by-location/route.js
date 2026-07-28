@@ -35,14 +35,20 @@ export async function GET(request) {
     photo: (p["Photo URL"] || "").trim(),
     newPatients: (p["New Patients"] || "").trim(),
     anyPatients: (p["Any Patients"] || "").trim(),
+    suite: (p.Suite || "").trim(),
   }));
 
-  // Same sort as the directory pages: MDs first, then alphabetical by last name.
+  // Sort by suite number (numeric-aware, so "203" < "1200" correctly).
+  // Providers with no suite listed sort to the end.
   results.sort((a, b) => {
-    const aIsMD = a.title.toUpperCase() === "MD" ? 0 : 1;
-    const bIsMD = b.title.toUpperCase() === "MD" ? 0 : 1;
-    if (aIsMD !== bIsMD) return aIsMD - bIsMD;
-    return a.lastName.toLowerCase().localeCompare(b.lastName.toLowerCase());
+    const aNum = parseInt(a.suite, 10);
+    const bNum = parseInt(b.suite, 10);
+    const aValid = !isNaN(aNum);
+    const bValid = !isNaN(bNum);
+    if (aValid && bValid) return aNum - bNum;
+    if (aValid) return -1;
+    if (bValid) return 1;
+    return a.suite.localeCompare(b.suite);
   });
 
   return new Response(
