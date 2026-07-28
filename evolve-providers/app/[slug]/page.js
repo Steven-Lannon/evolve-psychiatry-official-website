@@ -16,6 +16,27 @@ import {
 } from "../../lib/icons";
 import ClickableProfilePhoto from "../components/ClickableProfilePhoto";
 
+// Returns an accurate professional role description based on both Type
+// AND credential (Title) -- not just Type alone. "Psychiatrist" only
+// applies to MD/DO; a PMHNP or PA-C prescriber is not a psychiatrist by
+// definition, even though they prescribe in a psychiatric practice.
+// Used for the visible on-page subtitle and structured data jobTitle --
+// NOT for the <title> tag/metadata, which keeps its own simpler wording.
+function getAccurateRole(typeVal, titleVal) {
+  const credential = (titleVal || "").trim().toUpperCase();
+  if (/^prescriber$/i.test(typeVal)) {
+    if (/^(MD|DO)$/.test(credential)) return "Psychiatrist";
+    if (/^(PMHNP|PMHNP-BC|PMHNP-C|NP)$/.test(credential)) {
+      return "Psychiatric Nurse Practitioner";
+    }
+    if (/^(PA|PA-C)$/.test(credential)) return "Psychiatric Physician Assistant";
+    return "Psychiatric Prescriber";
+  }
+  if (/^therapist$/i.test(typeVal)) return "Therapist";
+  return typeVal || "Clinician";
+}
+
+
 // Tells Next.js which slugs exist at build time, so every provider page
 // is pre-rendered as real static HTML — bio and all — before anyone
 // ever visits it. Revalidates hourly to pick up new/changed providers
@@ -125,6 +146,8 @@ export default async function ProviderPage({ params }) {
   const notAcceptingAny = /^no$/i.test(anyPatientsVal);
   const isRemote = /^remote$/i.test(locationVal);
 
+  const accurateRole = getAccurateRole(typeVal, title);
+
   const locationPageHref =
     locationVal && !isRemote
       ? `/${locationVal.trim().toLowerCase().replace(/\s+/g, "-")}`
@@ -146,7 +169,7 @@ export default async function ProviderPage({ params }) {
     name: plainName,
     url: `https://evolvepsychiatry.com/${slug}`,
     ...(title && { honorificSuffix: title }),
-    ...(typeVal && { jobTitle: typeVal }),
+    ...(accurateRole && { jobTitle: accurateRole }),
     ...(photoVal && { image: photoVal }),
     ...(locationVal &&
       !isRemote && {
@@ -224,6 +247,7 @@ export default async function ProviderPage({ params }) {
           />
           <div className="profile-heading">
             <h1>{displayName}</h1>
+            {accurateRole && <p className="profile-role-subtitle">{accurateRole}</p>}
             <div className="badge-row">
               {locationVal && (
                 <span className="location-badge">
