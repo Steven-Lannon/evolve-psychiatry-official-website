@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useSearchParams } from "next/navigation";
+import { getAccurateRole } from "../../lib/roles";
 
 // Your spreadsheet's Location column just has the city name (e.g. "Albany").
 // This map adds the state for display only -- it never touches the sheet.
@@ -311,6 +312,7 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
                 const notAcceptingAny = /^no$/i.test((p["Any Patients"] || "").trim());
                 const acceptingNew = /^yes$/i.test((p["New Patients"] || "").trim());
                 const isRemote = /^remote$/i.test(locationVal);
+                const accurateRole = getAccurateRole(p.Type, p.Title);
 
                 const locationPageHref =
                   locationVal && !isRemote
@@ -356,6 +358,9 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
                           className="name"
                           dangerouslySetInnerHTML={{ __html: highlight(name, query) }}
                         />
+                        {accurateRole && (
+                          <p className="card-role-subtitle">{accurateRole}</p>
+                        )}
                         {locationVal && (
                           locationPageHref ? (
                             <a href={locationPageHref} className="location-badge">
