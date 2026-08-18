@@ -48,31 +48,8 @@ export default async function ConditionsWeTreat() {
         .sv-widget * { box-sizing: border-box; }
         .sv-widget p, .sv-widget li { font-weight: 400; }
 
-        /* Placeholder hero image near the top */
-        .sv-widget .cwt-hero-image-wrap {
-          width: 100%;
-          aspect-ratio: 16 / 5;
-          border-radius: 14px;
-          overflow: hidden;
-          margin-bottom: 36px;
-          background: var(--sv-accent-soft);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .sv-widget .cwt-hero-image-placeholder {
-          color: var(--sv-muted);
-          font-size: 14px;
-          font-weight: 600;
-          letter-spacing: 0.02em;
-        }
-        @media (max-width: 700px) {
-          .sv-widget .cwt-hero-image-wrap { aspect-ratio: 16 / 9; }
-        }
-
-        /* Intro — title and sub now share the same font weight/size
-           treatment as body copy, per your request, just centered and
-           with a bit more breathing room above the list. */
+        /* Intro — sub still matches body copy weight, but the H1 is
+           back to a large display size per your request. */
         .sv-widget .cwt-intro-wrap {
           text-align: center;
           max-width: 760px;
@@ -83,10 +60,11 @@ export default async function ConditionsWeTreat() {
           letter-spacing: 0.06em; color: var(--sv-accent); margin: 0 0 8px 0;
         }
         .sv-widget h1 {
-          font-size: 20px;
+          font-size: 60px;
           font-weight: 400;
           margin: 0 0 14px 0;
           color: var(--sv-ink);
+          line-height: 1.1;
         }
         .sv-widget .cwt-intro-sub {
           font-size: 17px; font-weight: 400; line-height: 1.5;
@@ -129,12 +107,6 @@ export default async function ConditionsWeTreat() {
           color: var(--sv-muted);
         }
       `}</style>
-
-      <div className="cwt-hero-image-wrap">
-        {/* Placeholder — replace with an <img> tag once you have the photo,
-            e.g. <img src="..." alt="..." style={{width:"100%", height:"100%", objectFit:"cover"}} /> */}
-        <span className="cwt-hero-image-placeholder">[ Hero image placeholder ]</span>
-      </div>
 
       <div className="cwt-intro-wrap">
         <p className="sv-eyebrow">Beat Anxiety, Depression, and More With</p>
