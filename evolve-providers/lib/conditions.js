@@ -13,7 +13,7 @@ const SHEET_ID = process.env.GOOGLE_CONDITIONS_SHEET_ID;
 const API_KEY = process.env.GOOGLE_SHEETS_API_KEY;
 
 // Change this if your tab is named differently.
-const RANGE = "Conditions!A:G";
+const RANGE = "Sheet1!A:G";
 
 // Column order on the sheet: name | slug | category | card_blurb | full_description | active | order
 const COL = {
@@ -95,7 +95,9 @@ export async function getAllConditions({ revalidate = 3600 } = {}) {
 }
 
 // Groups active conditions by category, preserving first-seen category
-// order and sorting each category's conditions by the `order` column.
+// order (except "Other", which always sorts last regardless of where it
+// appears in the sheet), and sorting each category's conditions by the
+// `order` column.
 export async function getCategorizedConditions({ revalidate = 3600 } = {}) {
   const conditions = await getAllConditions({ revalidate });
 
@@ -107,10 +109,20 @@ export async function getCategorizedConditions({ revalidate = 3600 } = {}) {
     categoryMap.get(condition.category).push(condition);
   }
 
-  return Array.from(categoryMap.entries()).map(([name, conds]) => ({
+  const categories = Array.from(categoryMap.entries()).map(([name, conds]) => ({
     name,
     conditions: conds.sort((a, b) => a.order - b.order),
   }));
+
+  categories.sort((a, b) => {
+    const aIsOther = a.name.trim().toLowerCase() === "other";
+    const bIsOther = b.name.trim().toLowerCase() === "other";
+    if (aIsOther && !bIsOther) return 1;
+    if (bIsOther && !aIsOther) return -1;
+    return 0; // otherwise keep existing (first-seen) order
+  });
+
+  return categories;
 }
 
 // Returns a single condition by slug — used by the individual condition
