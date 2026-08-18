@@ -109,14 +109,14 @@ export default async function ConditionsWeTreat() {
       `}</style>
 
       <div className="cwt-intro-wrap">
-        <p className="sv-eyebrow">Beat Anxiety, Depression, and More With</p>
+        <p className="sv-eyebrow">Comprehensive Care, Close to Home</p>
         <h1>Conditions We Treat</h1>
         <p className="cwt-intro-sub">
-          At Evolve Psychiatry, we provide comprehensive mental health
-          support for a wide range of conditions. Our licensed clinicians
-          and psychiatrists deliver personalized care tailored to each
-          patient's needs — whether you're seeking therapy, medication
-          management, or urgent psychiatric support.
+          Evolve Psychiatry's board-certified psychiatrists and licensed
+          therapists treat a wide range of mental health conditions across
+          our locations in New York and North Carolina. Every treatment
+          plan is built around your specific symptoms, history, and goals —
+          through talk therapy, medication management, TMS, or Spravato.
         </p>
       </div>
 
