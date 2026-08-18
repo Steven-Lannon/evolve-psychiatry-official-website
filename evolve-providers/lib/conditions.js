@@ -60,7 +60,10 @@ export async function getAllConditions({ revalidate = 3600 } = {}) {
   });
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch conditions sheet: ${res.status}`);
+    const errorBody = await res.text().catch(() => "(could not read response body)");
+    throw new Error(
+      `Failed to fetch conditions sheet: ${res.status} — ${errorBody}`
+    );
   }
 
   const data = await res.json();
