@@ -2,6 +2,33 @@
 
 import { useState, useMemo } from "react";
 
+// Escapes regex special characters in the user's search input so it can't
+// break the highlight regex (e.g. someone typing "(" or "?").
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Splits `text` around case-insensitive matches of `query` and wraps each
+// match in a <mark> for highlighting. Returns the original text untouched
+// if query is empty.
+function highlightMatch(text, query) {
+  const q = query.trim();
+  if (!q) return text;
+
+  const regex = new RegExp(`(${escapeRegExp(q)})`, "gi");
+  const parts = text.split(regex);
+
+  return parts.map((part, i) =>
+    regex.test(part) && part.toLowerCase() === q.toLowerCase() ? (
+      <mark className="cwt-highlight" key={i}>
+        {part}
+      </mark>
+    ) : (
+      part
+    )
+  );
+}
+
 // Client component so the search box can filter live in the browser.
 // Everything else on the page stays server-rendered/static — only this
 // piece needs "use client". Receives the already-categorized condition
@@ -56,14 +83,23 @@ export default function ConditionsSearch({ categories }) {
       </div>
 
       {query.trim() && totalMatches === 0 && (
-        <p className="cwt-no-results">
-          No conditions matched "{query}". Try a different search term.
-        </p>
+        <div className="cwt-no-results">
+          <p>
+            Condition or disorder you're looking for not here? We may still
+            treat it! Please contact our New Patient department if you have
+            any questions:
+          </p>
+          <a href="tel:+18444432563,1" className="cwt-no-results-phone">
+            844-443-2563 x1
+          </a>
+        </div>
       )}
 
       {filteredCategories.map((category) => (
         <div className="sv-section" key={category.name}>
-          <h2 className="sv-section-title">{category.name}</h2>
+          <h2 className="sv-section-title">
+            {highlightMatch(category.name, query)}
+          </h2>
           <div className="cwt-grid">
             {category.conditions.map((condition) => (
               // "Learn more" links are intentionally disabled here —
@@ -83,9 +119,9 @@ export default function ConditionsSearch({ categories }) {
                   >
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
-                  <h3>{condition.name}</h3>
+                  <h3>{highlightMatch(condition.name, query)}</h3>
                 </div>
-                <p>{condition.cardBlurb}</p>
+                <p>{highlightMatch(condition.cardBlurb, query)}</p>
               </div>
             ))}
           </div>
