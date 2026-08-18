@@ -60,7 +60,7 @@ export default async function ConditionsWeTreat() {
           letter-spacing: 0.06em; color: var(--sv-accent); margin: 0 0 8px 0;
         }
         .sv-widget h1 {
-          font-size: 60px;
+          font-size: 45px;
           font-weight: 400;
           margin: 0 0 14px 0;
           color: var(--sv-ink);
@@ -98,7 +98,7 @@ export default async function ConditionsWeTreat() {
         .sv-widget .cwt-card h3 {
           margin: 0 0 8px 0;
           font-size: 17px;
-          font-weight: 400;
+          font-weight: 500;
           color: var(--sv-ink);
         }
         .sv-widget .cwt-card p {
