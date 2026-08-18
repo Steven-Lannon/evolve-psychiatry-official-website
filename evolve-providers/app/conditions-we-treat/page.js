@@ -98,7 +98,7 @@ export default async function ConditionsWeTreat() {
         .sv-widget .cwt-card h3 {
           margin: 0 0 8px 0;
           font-size: 17px;
-          font-weight: 700;
+          font-weight: 600;
           color: var(--sv-ink);
         }
         .sv-widget .cwt-card p {
