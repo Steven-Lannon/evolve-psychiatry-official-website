@@ -17,6 +17,11 @@ export const revalidate = 3600;
 export default async function ConditionsWeTreat() {
   const categories = await getCategorizedConditions({ revalidate: 3600 });
 
+  // Categories still exist in the sheet/data model (kept for future use —
+  // e.g. if you bring back grouped sections later) but are flattened here
+  // into one single list of conditions for display, per your request.
+  const allConditions = categories.flatMap((c) => c.conditions);
+
   return (
     <div className="sv-widget">
       <style>{`
@@ -43,18 +48,31 @@ export default async function ConditionsWeTreat() {
         .sv-widget * { box-sizing: border-box; }
         .sv-widget p, .sv-widget li { font-weight: 400; }
 
-        .sv-widget .sv-breadcrumb {
+        /* Placeholder hero image near the top */
+        .sv-widget .cwt-hero-image-wrap {
+          width: 100%;
+          aspect-ratio: 16 / 5;
+          border-radius: 14px;
+          overflow: hidden;
+          margin-bottom: 36px;
+          background: var(--sv-accent-soft);
           display: flex;
           align-items: center;
-          gap: 8px;
-          font-size: 14px;
-          margin-bottom: 28px;
+          justify-content: center;
         }
-        .sv-widget .sv-breadcrumb a { color: var(--sv-accent); text-decoration: underline; }
-        .sv-widget .sv-breadcrumb-sep { color: var(--sv-muted); }
-        .sv-widget .sv-breadcrumb-current { color: var(--sv-muted); font-weight: 600; }
+        .sv-widget .cwt-hero-image-placeholder {
+          color: var(--sv-muted);
+          font-size: 14px;
+          font-weight: 600;
+          letter-spacing: 0.02em;
+        }
+        @media (max-width: 700px) {
+          .sv-widget .cwt-hero-image-wrap { aspect-ratio: 16 / 9; }
+        }
 
-        /* Intro (same type scale as sv-hero-text, centered, no photo) */
+        /* Intro — title and sub now share the same font weight/size
+           treatment as body copy, per your request, just centered and
+           with a bit more breathing room above the list. */
         .sv-widget .cwt-intro-wrap {
           text-align: center;
           max-width: 760px;
@@ -64,14 +82,18 @@ export default async function ConditionsWeTreat() {
           font-size: 12px; font-weight: 700; text-transform: uppercase;
           letter-spacing: 0.06em; color: var(--sv-accent); margin: 0 0 8px 0;
         }
-        .sv-widget h1 { font-size: 32px; font-weight: 700; margin: 0 0 14px 0; letter-spacing: -0.01em; color: var(--sv-ink); }
-        .sv-widget .cwt-intro-sub { font-size: 17px; font-weight: 400; line-height: 1.5; color: var(--sv-muted); margin: 0; }
+        .sv-widget h1 {
+          font-size: 20px;
+          font-weight: 400;
+          margin: 0 0 14px 0;
+          color: var(--sv-ink);
+        }
+        .sv-widget .cwt-intro-sub {
+          font-size: 17px; font-weight: 400; line-height: 1.5;
+          color: var(--sv-muted); margin: 0;
+        }
 
-        /* Sections */
-        .sv-widget .sv-section { margin-bottom: 48px; }
-        .sv-widget .sv-section-title { font-size: 22px; font-weight: 700; margin: 0 0 22px 0; }
-
-        /* Condition cards — same pattern as sv-related-grid-text, 3 per row */
+        /* Condition cards — flat list, 3 per row */
         .sv-widget .cwt-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
@@ -88,18 +110,31 @@ export default async function ConditionsWeTreat() {
           border: 1px solid var(--sv-line);
           border-radius: 12px;
           padding: 22px 20px;
+          transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
         }
-        .sv-widget .cwt-card h3 { margin: 0 0 8px 0; font-size: 15.5px; font-weight: 700; color: var(--sv-ink); }
-        .sv-widget .cwt-card p { margin: 0; font-size: 13.5px; color: var(--sv-muted); }
+        .sv-widget .cwt-card:hover {
+          border-color: var(--sv-accent);
+          box-shadow: 0 6px 18px rgba(34, 52, 90, 0.12);
+          transform: translateY(-2px);
+        }
+        .sv-widget .cwt-card h3 {
+          margin: 0 0 8px 0;
+          font-size: 17px;
+          font-weight: 400;
+          color: var(--sv-ink);
+        }
+        .sv-widget .cwt-card p {
+          margin: 0;
+          font-size: 13.5px;
+          color: var(--sv-muted);
+        }
       `}</style>
 
-      <nav className="sv-breadcrumb">
-        <a href="/">Home</a>
-        <span className="sv-breadcrumb-sep">&rsaquo;</span>
-        <a href="/services">Services</a>
-        <span className="sv-breadcrumb-sep">&rsaquo;</span>
-        <span className="sv-breadcrumb-current">Conditions We Treat</span>
-      </nav>
+      <div className="cwt-hero-image-wrap">
+        {/* Placeholder — replace with an <img> tag once you have the photo,
+            e.g. <img src="..." alt="..." style={{width:"100%", height:"100%", objectFit:"cover"}} /> */}
+        <span className="cwt-hero-image-placeholder">[ Hero image placeholder ]</span>
+      </div>
 
       <div className="cwt-intro-wrap">
         <p className="sv-eyebrow">Beat Anxiety, Depression, and More With</p>
@@ -113,23 +148,18 @@ export default async function ConditionsWeTreat() {
         </p>
       </div>
 
-      {categories.map((category) => (
-        <div className="sv-section" key={category.name}>
-          <h2 className="sv-section-title">{category.name}</h2>
-          <div className="cwt-grid">
-            {category.conditions.map((condition) => (
-              // "Learn more" links are intentionally disabled here —
-              // individual condition pages (e.g. /adhd-adult) aren't
-              // live yet. Once they are, swap this <div> back to an
-              // <a href={`/${condition.slug}`}> and re-add a link label.
-              <div className="cwt-card" key={condition.slug}>
-                <h3>{condition.name}</h3>
-                <p>{condition.cardBlurb}</p>
-              </div>
-            ))}
+      <div className="cwt-grid">
+        {allConditions.map((condition) => (
+          // "Learn more" links are intentionally disabled here —
+          // individual condition pages (e.g. /adhd-adult) aren't
+          // live yet. Once they are, swap this <div> back to an
+          // <a href={`/${condition.slug}`}> and re-add a link label.
+          <div className="cwt-card" key={condition.slug}>
+            <h3>{condition.name}</h3>
+            <p>{condition.cardBlurb}</p>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
