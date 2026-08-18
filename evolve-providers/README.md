@@ -112,3 +112,5 @@ exists at that path.
 - No more fighting Squarespace's global CSS with `!important` — this is
   a fully independent page, so none of that defensive styling is needed
   anymore.
+  
+8/18/26 - this is a test. i renamed the github repo to: evolve-psychiatry-official-website
