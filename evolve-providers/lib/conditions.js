@@ -13,7 +13,7 @@ const SHEET_ID = process.env.GOOGLE_CONDITIONS_SHEET_ID;
 const API_KEY = process.env.GOOGLE_SHEETS_API_KEY;
 
 // Change this if your tab is named differently.
-const RANGE = "Sheet1!A:G";
+const RANGE = "Conditions!A:G";
 
 // Column order on the sheet: name | slug | category | card_blurb | full_description | active | order
 const COL = {
