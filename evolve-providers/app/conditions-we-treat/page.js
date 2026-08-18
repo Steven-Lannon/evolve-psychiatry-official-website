@@ -112,11 +112,34 @@ export default async function ConditionsWeTreat() {
           border-color: var(--sv-accent);
           box-shadow: 0 0 0 3px var(--sv-accent-soft);
         }
+        .sv-widget .cwt-highlight {
+          background: var(--sv-accent-soft);
+          color: var(--sv-accent);
+          padding: 0 1px;
+          border-radius: 3px;
+        }
         .sv-widget .cwt-no-results {
           text-align: center;
-          color: var(--sv-muted);
+          max-width: 520px;
+          margin: 0 auto 40px;
+          padding: 24px 28px;
+          background: var(--sv-accent-soft);
+          border-radius: 12px;
+        }
+        .sv-widget .cwt-no-results p {
+          margin: 0 0 10px 0;
           font-size: 14.5px;
-          margin: 0 0 40px;
+          color: var(--sv-ink);
+        }
+        .sv-widget .cwt-no-results-phone {
+          display: inline-block;
+          font-size: 16px;
+          font-weight: 700;
+          color: var(--sv-accent);
+          text-decoration: none;
+        }
+        .sv-widget .cwt-no-results-phone:hover {
+          text-decoration: underline;
         }
 
         /* Category sections */
