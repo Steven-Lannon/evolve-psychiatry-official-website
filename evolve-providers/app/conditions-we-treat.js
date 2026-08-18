@@ -1,129 +1,155 @@
-// Fetches condition data from Google Sheets using the official Sheets API
-// — same pattern as lib/sheets.js for providers, NOT the gviz workaround.
-// This runs on the SERVER — at build time and/or on each request depending
-// on how a route configures its cache — so data is always available before
-// any HTML is sent to the browser or a crawler. No client-side fetch, no
-// visible loading delay.
-//
-// Requires the same GOOGLE_SHEETS_API_KEY env var already set up for the
-// provider directory, plus a new GOOGLE_CONDITIONS_SHEET_ID pointing at
-// this specific sheet (https://docs.google.com/spreadsheets/d/151SO6sGQFXS5AeviHpI6Ql6cU6-skoBiwIxa5_d81Hg).
+import Link from "next/link";
+import { getCategorizedConditions } from "../../lib/conditions";
+// Matches the relative-import convention used in app/[slug]/page.js
+// ("../../lib/sheets") — this file lives at app/conditions-we-treat/page.js,
+// same folder depth, so the same "../../lib/..." path applies.
 
-const SHEET_ID = process.env.GOOGLE_CONDITIONS_SHEET_ID;
-const API_KEY = process.env.GOOGLE_SHEETS_API_KEY;
-
-// Change this if your tab is named differently.
-const RANGE = "Conditions!A:G";
-
-// Column order on the sheet: name | slug | category | card_blurb | full_description | active | order
-const COL = {
-  NAME: 0,
-  SLUG: 1,
-  CATEGORY: 2,
-  CARD_BLURB: 3,
-  FULL_DESCRIPTION: 4,
-  ACTIVE: 5,
-  ORDER: 6,
+// SEO metadata — same export pattern as your provider pages
+export const metadata = {
+  title: "Conditions We Treat | Evolve Psychiatry",
+  description:
+    "Evolve Psychiatry provides personalized treatment for anxiety, mood disorders, ADHD, trauma, OCD, and more across our Massapequa, Syosset, Garden City, Albany, Hauppauge, and Wilmington locations.",
 };
 
-// Matches the same slugify convention used for providers, so any manual
-// slugs typed into the sheet stay consistent even if someone fat-fingers
-// capitalization or spacing.
-export function slugify(text) {
-  return (text || "")
-    .trim()
-    .toLowerCase()
-    .replace(/['\u2018\u2019]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
+// Matches the same pattern as app/[slug]/page.js — sets the page-level
+// cache lifetime in addition to what's passed into the fetch itself.
+export const revalidate = 3600;
 
-// Fetches and parses every condition row from the sheet.
-// `revalidate` controls Next.js's cache lifetime for this fetch — how long
-// a cached copy is served before the next request triggers a fresh pull
-// from Google Sheets. 3600 = 1 hour. Set to 0 only for the on-demand
-// revalidation route — never for pages serving real traffic, since that
-// would hit the Sheets API on every single visitor.
-export async function getAllConditions({ revalidate = 3600 } = {}) {
-  if (!SHEET_ID || !API_KEY) {
-    throw new Error(
-      "Missing GOOGLE_CONDITIONS_SHEET_ID or GOOGLE_SHEETS_API_KEY environment variables."
-    );
-  }
+export default async function ConditionsWeTreat() {
+  const categories = await getCategorizedConditions({ revalidate: 3600 });
 
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(
-    RANGE
-  )}?key=${API_KEY}`;
+  return (
+    <div className="wrap">
+      <section className="cwt-hero">
+        <p className="cwt-eyebrow">Beat Anxiety, Depression, and More With</p>
+        <h1 className="cwt-title">Conditions We Treat</h1>
+        <p className="cwt-intro">
+          At Evolve Psychiatry, we provide comprehensive mental health support
+          for a wide range of conditions. Our licensed clinicians and
+          psychiatrists deliver personalized care tailored to each patient's
+          needs — whether you're seeking therapy, medication management, or
+          urgent psychiatric support.
+        </p>
+      </section>
 
-  const res = await fetch(url, {
-    next: { revalidate },
-  });
+      {categories.map((category) => (
+        <section className="cwt-category" key={category.name}>
+          <h2 className="cwt-category-title">{category.name}</h2>
+          <div className="cwt-grid">
+            {category.conditions.map((condition) => (
+              <Link
+                href={`/${condition.slug}`}
+                className="cwt-card"
+                key={condition.slug}
+              >
+                <h3 className="cwt-card-title">{condition.name}</h3>
+                <p className="cwt-card-blurb">{condition.cardBlurb}</p>
+                <span className="cwt-card-link">Learn more →</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      ))}
 
-  if (!res.ok) {
-    throw new Error(`Failed to fetch conditions sheet: ${res.status}`);
-  }
+      <style>{`
+        .cwt-hero {
+          max-width: 760px;
+          margin: 0 auto 56px;
+          text-align: center;
+          padding: 64px 24px 0;
+        }
 
-  const data = await res.json();
-  const rows = data.values || [];
+        .cwt-eyebrow {
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #1e3a8a;
+          margin-bottom: 12px;
+        }
 
-  // First row is the header row — skip it.
-  const dataRows = rows.slice(1);
+        .cwt-title {
+          font-size: 48px;
+          font-weight: 600;
+          color: #0f1729;
+          margin: 0 0 20px;
+          line-height: 1.1;
+        }
 
-  const conditions = dataRows
-    .map((row) => {
-      const name = row[COL.NAME] || "";
-      const slug = slugify(row[COL.SLUG] || row[COL.NAME] || "");
-      const category = row[COL.CATEGORY] || "Uncategorized";
-      const cardBlurb = row[COL.CARD_BLURB] || "";
-      const fullDescription = row[COL.FULL_DESCRIPTION] || "";
-      const active = String(row[COL.ACTIVE] || "").toUpperCase() === "TRUE";
-      const order = Number(row[COL.ORDER]) || 999;
+        .cwt-intro {
+          font-size: 17px;
+          line-height: 1.6;
+          color: #334155;
+          margin: 0;
+        }
 
-      return {
-        name,
-        slug,
-        category,
-        cardBlurb,
-        fullDescription,
-        active,
-        order,
-      };
-    })
-    .filter((c) => c.active && c.name && c.slug);
+        .cwt-category {
+          max-width: 1160px;
+          margin: 0 auto 48px;
+          padding: 0 24px;
+        }
 
-  return conditions;
-}
+        .cwt-category-title {
+          font-size: 22px;
+          font-weight: 600;
+          color: #1e3a8a;
+          margin: 0 0 20px;
+          padding-bottom: 10px;
+          border-bottom: 2px solid #c7dafc;
+        }
 
-// Groups active conditions by category, preserving first-seen category
-// order and sorting each category's conditions by the `order` column.
-export async function getCategorizedConditions({ revalidate = 3600 } = {}) {
-  const conditions = await getAllConditions({ revalidate });
+        .cwt-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          gap: 20px;
+        }
 
-  const categoryMap = new Map();
-  for (const condition of conditions) {
-    if (!categoryMap.has(condition.category)) {
-      categoryMap.set(condition.category, []);
-    }
-    categoryMap.get(condition.category).push(condition);
-  }
+        .cwt-card {
+          background: #ffffff;
+          border: 1px solid #c7dafc;
+          border-radius: 12px;
+          padding: 24px;
+          text-decoration: none;
+          display: flex;
+          flex-direction: column;
+          transition: box-shadow 0.15s ease, transform 0.15s ease;
+        }
 
-  return Array.from(categoryMap.entries()).map(([name, conds]) => ({
-    name,
-    conditions: conds.sort((a, b) => a.order - b.order),
-  }));
-}
+        .cwt-card:hover {
+          box-shadow: 0 6px 20px rgba(30, 58, 138, 0.12);
+          transform: translateY(-2px);
+        }
 
-// Returns a single condition by slug — used by the individual condition
-// pages (e.g. /adhd-adult) once those are built out.
-export async function getConditionBySlug(slug, { revalidate = 3600 } = {}) {
-  const conditions = await getAllConditions({ revalidate });
-  return conditions.find((c) => c.slug === slug) || null;
-}
+        .cwt-card-title {
+          font-size: 18px;
+          font-weight: 600;
+          color: #1e3a8a;
+          margin: 0 0 10px;
+        }
 
-// Returns just the list of active slugs — used by generateStaticParams
-// on the individual condition pages so Next.js knows which routes to
-// pre-build at deploy time.
-export async function getAllConditionSlugs({ revalidate = 3600 } = {}) {
-  const conditions = await getAllConditions({ revalidate });
-  return conditions.map((c) => c.slug);
+        .cwt-card-blurb {
+          font-size: 14.5px;
+          line-height: 1.55;
+          color: #475569;
+          margin: 0 0 16px;
+          flex-grow: 1;
+        }
+
+        .cwt-card-link {
+          font-size: 13.5px;
+          font-weight: 600;
+          color: #2563eb;
+        }
+
+        @media (max-width: 640px) {
+          .cwt-title {
+            font-size: 34px;
+          }
+          .cwt-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
+    </div>
+  );
 }
