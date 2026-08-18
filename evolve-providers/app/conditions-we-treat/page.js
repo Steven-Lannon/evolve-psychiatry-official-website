@@ -17,11 +17,6 @@ export const revalidate = 3600;
 export default async function ConditionsWeTreat() {
   const categories = await getCategorizedConditions({ revalidate: 3600 });
 
-  // Categories still exist in the sheet/data model (kept for future use —
-  // e.g. if you bring back grouped sections later) but are flattened here
-  // into one single list of conditions for display, per your request.
-  const allConditions = categories.flatMap((c) => c.conditions);
-
   return (
     <div className="sv-widget">
       <style>{`
@@ -84,7 +79,17 @@ export default async function ConditionsWeTreat() {
           color: var(--sv-muted); margin: 0;
         }
 
-        /* Condition cards — flat list, 3 per row */
+        /* Category sections */
+        .sv-widget .sv-section { margin-bottom: 44px; }
+        .sv-widget .sv-section-title {
+          font-size: 22px;
+          font-weight: 700;
+          margin: 0 0 20px 0;
+          padding-bottom: 10px;
+          border-bottom: 2px solid var(--sv-accent-soft);
+        }
+
+        /* Condition cards — 3 per row */
         .sv-widget .cwt-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
@@ -124,7 +129,7 @@ export default async function ConditionsWeTreat() {
         .sv-widget .cwt-card h3 {
           margin: 0;
           font-size: 17px;
-          font-weight: 550;
+          font-weight: 700;
           color: var(--sv-ink);
         }
         .sv-widget .cwt-card p {
@@ -138,10 +143,11 @@ export default async function ConditionsWeTreat() {
         <p className="sv-eyebrow">Comprehensive Care, Close to Home</p>
         <div className="cwt-title-row">
           <svg className="cwt-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6 12v-2a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v3"></path>
-            <path d="M10 13v-1a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2"></path>
-            <path d="M14 13.5V12a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v3c0 2.8-2.2 5-5 5h-2c-1.4 0-2.7-.6-3.6-1.6L3.5 14"></path>
-            <path d="M6 12l-2.2-1.8a1.5 1.5 0 0 1 1.9-2.3L8 9.5"></path>
+            <path d="M6 4h-1a2 2 0 0 0 -2 2v3.5a5.5 5.5 0 0 0 11 0v-3.5a2 2 0 0 0 -2 -2h-1"></path>
+            <path d="M8 15a6 6 0 1 0 12 0v-2"></path>
+            <path d="M11 3v2"></path>
+            <path d="M6 3v2"></path>
+            <circle cx="20" cy="10" r="2"></circle>
           </svg>
           <h1>Conditions We Treat</h1>
         </div>
@@ -154,23 +160,28 @@ export default async function ConditionsWeTreat() {
         </p>
       </div>
 
-      <div className="cwt-grid">
-        {allConditions.map((condition) => (
-          // "Learn more" links are intentionally disabled here —
-          // individual condition pages (e.g. /adhd-adult) aren't
-          // live yet. Once they are, swap this <div> back to an
-          // <a href={`/${condition.slug}`}> and re-add a link label.
-          <div className="cwt-card" key={condition.slug}>
-            <div className="cwt-card-title-row">
-              <svg className="cwt-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              <h3>{condition.name}</h3>
-            </div>
-            <p>{condition.cardBlurb}</p>
+      {categories.map((category) => (
+        <div className="sv-section" key={category.name}>
+          <h2 className="sv-section-title">{category.name}</h2>
+          <div className="cwt-grid">
+            {category.conditions.map((condition) => (
+              // "Learn more" links are intentionally disabled here —
+              // individual condition pages (e.g. /adhd-adult) aren't
+              // live yet. Once they are, swap this <div> back to an
+              // <a href={`/${condition.slug}`}> and re-add a link label.
+              <div className="cwt-card" key={condition.slug}>
+                <div className="cwt-card-title-row">
+                  <svg className="cwt-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <h3>{condition.name}</h3>
+                </div>
+                <p>{condition.cardBlurb}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 }
