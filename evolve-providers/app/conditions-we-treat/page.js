@@ -1,4 +1,5 @@
 import { getCategorizedConditions } from "../../lib/conditions";
+import ConditionsSearch from "../components/ConditionsSearch";
 // Matches the relative-import convention used in app/[slug]/page.js
 // ("../../lib/sheets") — this file lives at app/conditions-we-treat/page.js,
 // same folder depth, so the same "../../lib/..." path applies.
@@ -77,6 +78,45 @@ export default async function ConditionsWeTreat() {
         .sv-widget .cwt-intro-sub {
           font-size: 17px; font-weight: 400; line-height: 1.5;
           color: var(--sv-muted); margin: 0;
+        }
+
+        /* Search bar */
+        .sv-widget .cwt-search-wrap {
+          position: relative;
+          max-width: 480px;
+          margin: 0 auto 40px;
+        }
+        .sv-widget .cwt-search-icon {
+          position: absolute;
+          left: 16px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 18px;
+          height: 18px;
+          color: var(--sv-muted);
+          pointer-events: none;
+        }
+        .sv-widget .cwt-search-input {
+          width: 100%;
+          font-family: inherit;
+          font-size: 15px;
+          padding: 12px 16px 12px 44px;
+          border: 1px solid var(--sv-line);
+          border-radius: 10px;
+          background: var(--sv-card);
+          color: var(--sv-ink);
+          outline: none;
+          transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .sv-widget .cwt-search-input:focus {
+          border-color: var(--sv-accent);
+          box-shadow: 0 0 0 3px var(--sv-accent-soft);
+        }
+        .sv-widget .cwt-no-results {
+          text-align: center;
+          color: var(--sv-muted);
+          font-size: 14.5px;
+          margin: 0 0 40px;
         }
 
         /* Category sections */
@@ -160,28 +200,7 @@ export default async function ConditionsWeTreat() {
         </p>
       </div>
 
-      {categories.map((category) => (
-        <div className="sv-section" key={category.name}>
-          <h2 className="sv-section-title">{category.name}</h2>
-          <div className="cwt-grid">
-            {category.conditions.map((condition) => (
-              // "Learn more" links are intentionally disabled here —
-              // individual condition pages (e.g. /adhd-adult) aren't
-              // live yet. Once they are, swap this <div> back to an
-              // <a href={`/${condition.slug}`}> and re-add a link label.
-              <div className="cwt-card" key={condition.slug}>
-                <div className="cwt-card-title-row">
-                  <svg className="cwt-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  <h3>{condition.name}</h3>
-                </div>
-                <p>{condition.cardBlurb}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
+      <ConditionsSearch categories={categories} />
     </div>
   );
 }
