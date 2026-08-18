@@ -8,6 +8,8 @@
  *   - For any request whose path matches a known provider slug
  *     (e.g. /priyadarshan-bajpayi), it fetches and serves the fully
  *     static, pre-rendered page from the Vercel deployment instead.
+ *   - Same for condition slugs (e.g. /adhd-adult) once those individual
+ *     pages exist, plus the /conditions-we-treat listing page itself.
  *   - For every other request (your homepage, blog, services, existing
  *     /prescribers and /therapists directory pages, etc.), it passes
  *     the request straight through to Squarespace, completely untouched.
@@ -41,8 +43,13 @@ const LEGACY_REDIRECTS = {
   "providers": "https://evolvepsychiatry.com/clinicians",
 };
 
-// How long this Worker caches the list of valid provider slugs at the
-// edge before re-checking with Vercel for new/removed providers.
+// Paths that should always route to Vercel regardless of the dynamic
+// slug lists below — static/known Next.js routes that aren't
+// provider or condition detail pages themselves (e.g. listing pages).
+const STATIC_VERCEL_PATHS = new Set(["conditions-we-treat"]);
+
+// How long this Worker caches the list of valid provider/condition
+// slugs at the edge before re-checking with Vercel for new/removed ones.
 const SLUG_LIST_CACHE_SECONDS = 300;
 
 export default {
@@ -62,57 +69,69 @@ export default {
     // otherwise get caught by the "not a provider page" check below,
     // and Squarespace has no idea what these files are.
     if (path.startsWith("_next/")) {
-      return fetch(`${VERCEL_APP_URL}/${path}`, {
-        headers: request.headers,
-      });
+      return proxyToVercel(path, request);
     }
 
     // Anything with a nested path (e.g. /blog/some-post), an empty path
-    // (the homepage), or a file extension is never a provider page —
-    // skip the slug check entirely and go straight to Squarespace.
+    // (the homepage), or a file extension is never a provider/condition
+    // page — skip the slug checks entirely and go straight to Squarespace.
     if (!path || path.includes("/") || path.includes(".")) {
       return fetch(request);
     }
 
-    const validSlugs = await getValidSlugs(ctx);
-
-    if (validSlugs.has(path)) {
-      // Serve the fully static, pre-rendered page from Vercel instead
-      // of Squarespace's JavaScript-rendered version.
-      const vercelUrl = `${VERCEL_APP_URL}/${path}`;
-      const vercelResponse = await fetch(vercelUrl, {
-        headers: request.headers,
-      });
-
-      // Build a fresh Headers object explicitly (rather than mutating
-      // anything derived from the fetch response) so we control caching
-      // at Cloudflare's edge too, and so the browser sees this as coming
-      // from your own domain.
-      const responseHeaders = new Headers(vercelResponse.headers);
-      responseHeaders.set(
-        "Cache-Control",
-        "public, max-age=300, stale-while-revalidate=3600"
-      );
-
-      return new Response(vercelResponse.body, {
-        status: vercelResponse.status,
-        statusText: vercelResponse.statusText,
-        headers: responseHeaders,
-      });
+    // Known static Vercel routes (e.g. the conditions listing page)
+    // always proxy, no slug lookup needed.
+    if (STATIC_VERCEL_PATHS.has(path)) {
+      return proxyToVercel(path, request);
     }
 
-    // Not a provider slug — pass through to Squarespace untouched.
+    const [validProviderSlugs, validConditionSlugs] = await Promise.all([
+      getValidSlugs(ctx, "/api/slugs"),
+      getValidSlugs(ctx, "/api/condition-slugs"),
+    ]);
+
+    if (validProviderSlugs.has(path) || validConditionSlugs.has(path)) {
+      return proxyToVercel(path, request);
+    }
+
+    // Not a provider or condition slug — pass through to Squarespace
+    // untouched.
     return fetch(request);
   },
 };
 
-async function getValidSlugs(ctx) {
+async function proxyToVercel(path, request) {
+  // Serve the fully static, pre-rendered page from Vercel instead of
+  // Squarespace's JavaScript-rendered version.
+  const vercelUrl = `${VERCEL_APP_URL}/${path}`;
+  const vercelResponse = await fetch(vercelUrl, {
+    headers: request.headers,
+  });
+
+  // Build a fresh Headers object explicitly (rather than mutating
+  // anything derived from the fetch response) so we control caching
+  // at Cloudflare's edge too, and so the browser sees this as coming
+  // from your own domain.
+  const responseHeaders = new Headers(vercelResponse.headers);
+  responseHeaders.set(
+    "Cache-Control",
+    "public, max-age=300, stale-while-revalidate=3600"
+  );
+
+  return new Response(vercelResponse.body, {
+    status: vercelResponse.status,
+    statusText: vercelResponse.statusText,
+    headers: responseHeaders,
+  });
+}
+
+async function getValidSlugs(ctx, apiPath) {
   const cache = caches.default;
-  const cacheKey = new Request(`${VERCEL_APP_URL}/api/slugs`);
+  const cacheKey = new Request(`${VERCEL_APP_URL}${apiPath}`);
   let response = await cache.match(cacheKey);
 
   if (!response) {
-    const fetched = await fetch(`${VERCEL_APP_URL}/api/slugs`);
+    const fetched = await fetch(`${VERCEL_APP_URL}${apiPath}`);
     if (fetched.ok) {
       // Cloudflare Workers treats a fetch() response's headers as
       // immutable, even after .clone() — so we build a brand new
