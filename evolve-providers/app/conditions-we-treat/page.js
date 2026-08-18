@@ -59,10 +59,23 @@ export default async function ConditionsWeTreat() {
           font-size: 12px; font-weight: 700; text-transform: uppercase;
           letter-spacing: 0.06em; color: var(--sv-accent); margin: 0 0 8px 0;
         }
+        .sv-widget .cwt-title-row {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 14px;
+          margin: 0 0 14px 0;
+        }
+        .sv-widget .cwt-title-icon {
+          width: 44px;
+          height: 44px;
+          color: var(--sv-accent);
+          flex-shrink: 0;
+        }
         .sv-widget h1 {
           font-size: 45px;
           font-weight: 400;
-          margin: 0 0 14px 0;
+          margin: 0;
           color: var(--sv-ink);
           line-height: 1.1;
         }
@@ -95,10 +108,23 @@ export default async function ConditionsWeTreat() {
           box-shadow: 0 6px 18px rgba(34, 52, 90, 0.12);
           transform: translateY(-2px);
         }
-        .sv-widget .cwt-card h3 {
+        .sv-widget .cwt-card-title-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 8px;
           margin: 0 0 8px 0;
+        }
+        .sv-widget .cwt-check-icon {
+          width: 19px;
+          height: 19px;
+          color: var(--sv-accent);
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+        .sv-widget .cwt-card h3 {
+          margin: 0;
           font-size: 17px;
-          font-weight: 600;
+          font-weight: 550;
           color: var(--sv-ink);
         }
         .sv-widget .cwt-card p {
@@ -110,7 +136,15 @@ export default async function ConditionsWeTreat() {
 
       <div className="cwt-intro-wrap">
         <p className="sv-eyebrow">Comprehensive Care, Close to Home</p>
-        <h1>Conditions We Treat</h1>
+        <div className="cwt-title-row">
+          <svg className="cwt-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6 12v-2a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v3"></path>
+            <path d="M10 13v-1a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2"></path>
+            <path d="M14 13.5V12a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v3c0 2.8-2.2 5-5 5h-2c-1.4 0-2.7-.6-3.6-1.6L3.5 14"></path>
+            <path d="M6 12l-2.2-1.8a1.5 1.5 0 0 1 1.9-2.3L8 9.5"></path>
+          </svg>
+          <h1>Conditions We Treat</h1>
+        </div>
         <p className="cwt-intro-sub">
           Evolve Psychiatry's board-certified psychiatrists and licensed
           therapists treat a wide range of mental health conditions across
@@ -127,7 +161,12 @@ export default async function ConditionsWeTreat() {
           // live yet. Once they are, swap this <div> back to an
           // <a href={`/${condition.slug}`}> and re-add a link label.
           <div className="cwt-card" key={condition.slug}>
-            <h3>{condition.name}</h3>
+            <div className="cwt-card-title-row">
+              <svg className="cwt-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <h3>{condition.name}</h3>
+            </div>
             <p>{condition.cardBlurb}</p>
           </div>
         ))}
