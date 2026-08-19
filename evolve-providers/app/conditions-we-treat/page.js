@@ -80,6 +80,45 @@ export default async function ConditionsWeTreat() {
           color: var(--sv-muted); margin: 0;
         }
 
+        /* CTA row — find clinician / register */
+        .sv-widget .cwt-cta-row {
+          display: flex;
+          justify-content: center;
+          gap: 14px;
+          flex-wrap: wrap;
+          margin: 0 0 40px;
+        }
+        .sv-widget .cwt-cta-primary,
+        .sv-widget .cwt-cta-secondary {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 22px;
+          border-radius: 9px;
+          font-size: 14.5px;
+          font-weight: 600;
+          text-decoration: none;
+          transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+        }
+        .sv-widget .cwt-cta-primary {
+          background: var(--sv-accent);
+          color: #ffffff;
+          border: 1px solid var(--sv-accent);
+        }
+        .sv-widget .cwt-cta-primary:hover {
+          background: #1a2947;
+          transform: translateY(-1px);
+        }
+        .sv-widget .cwt-cta-secondary {
+          background: transparent;
+          color: var(--sv-accent);
+          border: 1px solid var(--sv-line);
+        }
+        .sv-widget .cwt-cta-secondary:hover {
+          border-color: var(--sv-accent);
+          transform: translateY(-1px);
+        }
+
         /* Search bar */
         .sv-widget .cwt-search-wrap {
           position: relative;
@@ -221,6 +260,15 @@ export default async function ConditionsWeTreat() {
           plan is built around your specific symptoms, history, and goals —
           through talk therapy, medication management, TMS, or Spravato.
         </p>
+      </div>
+
+      <div className="cwt-cta-row">
+        <a href="/clinicians" className="cwt-cta-primary">
+          Find Your Clinician
+        </a>
+        <a href="/new-patient" className="cwt-cta-secondary">
+          Register Today
+        </a>
       </div>
 
       <ConditionsSearch categories={categories} />
