@@ -80,14 +80,17 @@ export default async function ConditionsWeTreat() {
           color: var(--sv-muted); margin: 0;
         }
 
-        /* CTA row — find clinician / register */
-        .sv-widget .cwt-cta-row {
+        /* Search + CTA row, side by side */
+        .sv-widget .cwt-search-cta-row {
           display: flex;
+          align-items: center;
           justify-content: center;
           gap: 14px;
           flex-wrap: wrap;
           margin: 0 0 40px;
         }
+
+        /* CTA buttons */
         .sv-widget .cwt-cta-primary,
         .sv-widget .cwt-cta-secondary {
           display: inline-flex;
@@ -98,6 +101,7 @@ export default async function ConditionsWeTreat() {
           font-size: 14.5px;
           font-weight: 600;
           text-decoration: none;
+          white-space: nowrap;
           transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
         }
         .sv-widget .cwt-cta-primary {
@@ -122,8 +126,8 @@ export default async function ConditionsWeTreat() {
         /* Search bar */
         .sv-widget .cwt-search-wrap {
           position: relative;
-          max-width: 480px;
-          margin: 0 auto 40px;
+          flex: 1 1 320px;
+          max-width: 420px;
         }
         .sv-widget .cwt-search-icon {
           position: absolute;
@@ -260,15 +264,6 @@ export default async function ConditionsWeTreat() {
           plan is built around your specific symptoms, history, and goals —
           through talk therapy, medication management, TMS, or Spravato.
         </p>
-      </div>
-
-      <div className="cwt-cta-row">
-        <a href="/clinicians" className="cwt-cta-primary">
-          Find Your Clinician
-        </a>
-        <a href="/new-patient" className="cwt-cta-secondary">
-          Register Today
-        </a>
       </div>
 
       <ConditionsSearch categories={categories} />
