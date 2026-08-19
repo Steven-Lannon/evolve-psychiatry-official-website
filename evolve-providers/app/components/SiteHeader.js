@@ -51,10 +51,11 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink
           <a href="/">Home</a>
         </div>
         <div class="header-nav-item header-nav-item--folder">
-          <button class="header-nav-folder-title" data-href="/services-folder/" aria-expanded="false" aria-controls="services">
+          <a class="header-nav-folder-title" href="/services-folder/" aria-controls="services">
             <span class="header-nav-folder-title-text">Services</span>
-          </button>
+          </a>
           <div class="header-nav-folder-content" id="services">
+            <div class="header-nav-folder-item"><a href="/conditions-we-treat"><span class="header-nav-folder-item-content">Conditions We Treat</span></a></div>
             <div class="header-nav-folder-item"><a href="/medication-management"><span class="header-nav-folder-item-content">Medication Management</span></a></div>
             <div class="header-nav-folder-item"><a href="/talk-therapy"><span class="header-nav-folder-item-content">Talk Therapy Counseling</span></a></div>
             <div class="header-nav-folder-item"><a href="/tms"><span class="header-nav-folder-item-content">TMS Therapy</span></a></div>
@@ -64,18 +65,18 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink
           </div>
         </div>
         <div class="header-nav-item header-nav-item--folder">
-          <button class="header-nav-folder-title" data-href="/clinicians-folder/" aria-expanded="false" aria-controls="clinicians">
+          <a class="header-nav-folder-title" href="/clinicians-folder/" aria-controls="clinicians">
             <span class="header-nav-folder-title-text">Clinicians</span>
-          </button>
+          </a>
           <div class="header-nav-folder-content" id="clinicians">
             <div class="header-nav-folder-item"><a href="/prescribers"><span class="header-nav-folder-item-content">Our Prescribers</span></a></div>
             <div class="header-nav-folder-item"><a href="/therapists"><span class="header-nav-folder-item-content">Our Therapists</span></a></div>
           </div>
         </div>
         <div class="header-nav-item header-nav-item--folder">
-          <button class="header-nav-folder-title" data-href="/locations-folder/" aria-expanded="false" aria-controls="locations">
+          <a class="header-nav-folder-title" href="/locations-folder/" aria-controls="locations">
             <span class="header-nav-folder-title-text">Locations</span>
-          </button>
+          </a>
           <div class="header-nav-folder-content" id="locations">
             <div class="header-nav-folder-item"><a href="/albany"><span class="header-nav-folder-item-content">Albany, NY</span></a></div>
             <div class="header-nav-folder-item"><a href="/garden-city"><span class="header-nav-folder-item-content">Garden City, NY</span></a></div>
@@ -267,6 +268,7 @@ const NAV_LINKS = [
   {
     label: "Services",
     children: [
+      { label: "Conditions We Treat", href: "/conditions-we-treat" },
       { label: "Medication Management", href: "/medication-management" },
       { label: "Talk Therapy Counseling", href: "/talk-therapy" },
       { label: "TMS Therapy", href: "/tms" },
