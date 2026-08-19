@@ -47,8 +47,8 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink
   <div class="header-nav">
     <div class="header-nav-wrapper">
       <nav class="header-nav-list">
-        <div class="header-nav-item header-nav-item--collection header-nav-item--active header-nav-item--homepage">
-          <a href="/" aria-current="page">Home</a>
+        <div class="header-nav-item header-nav-item--collection">
+          <a href="/">Home</a>
         </div>
         <div class="header-nav-item header-nav-item--folder">
           <button class="header-nav-folder-title" data-href="/services-folder/" aria-expanded="false" aria-controls="services">
@@ -159,8 +159,8 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink
   <div class="header-nav">
     <div class="header-nav-wrapper">
       <nav class="header-nav-list">
-        <div class="header-nav-item header-nav-item--collection header-nav-item--active header-nav-item--homepage">
-          <a href="/" aria-current="page">Home</a>
+        <div class="header-nav-item header-nav-item--collection">
+          <a href="/">Home</a>
         </div>
         <div class="header-nav-item header-nav-item--folder">
           <button class="header-nav-folder-title" data-href="/services-folder/" aria-expanded="false" aria-controls="services-m">
