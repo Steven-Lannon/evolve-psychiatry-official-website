@@ -51,7 +51,7 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink
           <a href="/">Home</a>
         </div>
         <div class="header-nav-item header-nav-item--folder">
-          <a class="header-nav-folder-title" href="/services-folder/" aria-controls="services">
+          <a class="header-nav-folder-title" href="/services" aria-controls="services">
             <span class="header-nav-folder-title-text">Services</span>
           </a>
           <div class="header-nav-folder-content" id="services">
@@ -59,13 +59,13 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink
             <div class="header-nav-folder-item"><a href="/medication-management"><span class="header-nav-folder-item-content">Medication Management</span></a></div>
             <div class="header-nav-folder-item"><a href="/talk-therapy"><span class="header-nav-folder-item-content">Talk Therapy Counseling</span></a></div>
             <div class="header-nav-folder-item"><a href="/tms"><span class="header-nav-folder-item-content">TMS Therapy</span></a></div>
-            <div class="header-nav-folder-item"><a href="/spravato"><span class="header-nav-folder-item-content">Spravato</span></a></div>
+            <div class="header-nav-folder-item"><a href="/spravato"><span class="header-nav-folder-item-content">SPRAVATO&reg;</span></a></div>
             <div class="header-nav-folder-item"><a href="/telehealth"><span class="header-nav-folder-item-content">Telehealth Appointments</span></a></div>
             <div class="header-nav-folder-item"><a href="/genesight"><span class="header-nav-folder-item-content">GeneSight Testing</span></a></div>
           </div>
         </div>
         <div class="header-nav-item header-nav-item--folder">
-          <a class="header-nav-folder-title" href="/clinicians-folder/" aria-controls="clinicians">
+          <a class="header-nav-folder-title" href="/clinicians" aria-controls="clinicians">
             <span class="header-nav-folder-title-text">Clinicians</span>
           </a>
           <div class="header-nav-folder-content" id="clinicians">
@@ -74,7 +74,7 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink
           </div>
         </div>
         <div class="header-nav-item header-nav-item--folder">
-          <a class="header-nav-folder-title" href="/locations-folder/" aria-controls="locations">
+          <a class="header-nav-folder-title" href="/locations" aria-controls="locations">
             <span class="header-nav-folder-title-text">Locations</span>
           </a>
           <div class="header-nav-folder-content" id="locations">
@@ -171,7 +171,7 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary shrink
             <div class="header-nav-folder-item"><a href="/medication-management"><span class="header-nav-folder-item-content">Medication Management</span></a></div>
             <div class="header-nav-folder-item"><a href="/talk-therapy"><span class="header-nav-folder-item-content">Talk Therapy Counseling</span></a></div>
             <div class="header-nav-folder-item"><a href="/tms"><span class="header-nav-folder-item-content">TMS Therapy</span></a></div>
-            <div class="header-nav-folder-item"><a href="/spravato"><span class="header-nav-folder-item-content">Spravato</span></a></div>
+            <div class="header-nav-folder-item"><a href="/spravato"><span class="header-nav-folder-item-content">SPRAVATO&reg;</span></a></div>
             <div class="header-nav-folder-item"><a href="/telehealth"><span class="header-nav-folder-item-content">Telehealth Appointments</span></a></div>
             <div class="header-nav-folder-item"><a href="/genesight"><span class="header-nav-folder-item-content">GeneSight Testing</span></a></div>
           </div>
@@ -272,7 +272,7 @@ const NAV_LINKS = [
       { label: "Medication Management", href: "/medication-management" },
       { label: "Talk Therapy Counseling", href: "/talk-therapy" },
       { label: "TMS Therapy", href: "/tms" },
-      { label: "Spravato", href: "/spravato" },
+      { label: "SPRAVATO®", href: "/spravato" },
       { label: "Telehealth Appointments", href: "/telehealth" },
       { label: "GeneSight Testing", href: "/genesight" },
     ],
