@@ -56,7 +56,13 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
   const [query, setQuery] = useState("");
   const [activeLocation, setActiveLocation] = useState("All");
   const [activeSex, setActiveSex] = useState("All");
-  const [biosVisible, setBiosVisible] = useState(false);
+  // FIX: this used to default to false, which meant the bio <p> below was
+  // never even added to the page (see the render logic further down) until
+  // someone clicked "Biographies on" -- so browser Ctrl+F, view-source, and
+  // search engines never saw any bio text on a fresh page load. Defaulting
+  // to true restores that (the toggle still works for anyone who wants the
+  // more compact, bios-collapsed view).
+  const [biosVisible, setBiosVisible] = useState(true);
   const [lightboxSrc, setLightboxSrc] = useState(null);
   const [lightboxAlt, setLightboxAlt] = useState("");
   const [scrollBtnVisible, setScrollBtnVisible] = useState(false);
@@ -125,7 +131,13 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
     if (q !== "") {
       rows = rows.filter((p) => {
         const fullName = `${p["First Name"] || ""} ${p["Last Name"] || ""}`.toLowerCase();
-        return fullName.includes(q);
+        // FIX: this used to only check the name, so typing a keyword that
+        // only appears in someone's bio (e.g. a condition or specialty)
+        // filtered every provider out instead of surfacing the match --
+        // even though highlight() below was already written to highlight
+        // matches inside bio text, implying bio search was the intent.
+        const bio = (p.Biography || "").toLowerCase();
+        return fullName.includes(q) || bio.includes(q);
       });
     }
     // MDs first, then alphabetical by last name.
