@@ -56,13 +56,13 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
   const [query, setQuery] = useState("");
   const [activeLocation, setActiveLocation] = useState("All");
   const [activeSex, setActiveSex] = useState("All");
-  // FIX: this used to default to false, which meant the bio <p> below was
-  // never even added to the page (see the render logic further down) until
-  // someone clicked "Biographies on" -- so browser Ctrl+F, view-source, and
-  // search engines never saw any bio text on a fresh page load. Defaulting
-  // to true restores that (the toggle still works for anyone who wants the
-  // more compact, bios-collapsed view).
-  const [biosVisible, setBiosVisible] = useState(true);
+  // Bios are collapsed by default (this is intentional -- the compact,
+  // bios-off view is what you want people to land on). The toggle below
+  // still lets a visitor turn them all on. Separately, see bioMatchesQuery
+  // further down: when a search actually matches text inside someone's
+  // bio, that one bio is shown regardless of this toggle, so the match is
+  // visible instead of just silently including that provider in results.
+  const [biosVisible, setBiosVisible] = useState(false);
   const [lightboxSrc, setLightboxSrc] = useState(null);
   const [lightboxAlt, setLightboxAlt] = useState("");
   const [scrollBtnVisible, setScrollBtnVisible] = useState(false);
@@ -442,16 +442,28 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
                           ))}
                         </div>
                       )}
-                      {bioText && (
-                        <div className="bio">
-                          {biosVisible && (
-                            <p
-                              className="bio-text"
-                              dangerouslySetInnerHTML={{ __html: highlight(bioText, query) }}
-                            />
-                          )}
-                        </div>
-                      )}
+                      {bioText && (() => {
+                        // FIX: previously this only respected the global
+                        // biosVisible toggle, so a search that matched only
+                        // text inside someone's bio still hid that bio --
+                        // nothing on the card explained why that provider
+                        // showed up. Now, if the current query matches this
+                        // provider's bio, it shows regardless of the
+                        // toggle, so the highlighted match is visible.
+                        const q = query.trim().toLowerCase();
+                        const bioMatchesQuery = q !== "" && bioText.toLowerCase().includes(q);
+                        const showThisBio = biosVisible || bioMatchesQuery;
+                        return (
+                          <div className="bio">
+                            {showThisBio && (
+                              <p
+                                className="bio-text"
+                                dangerouslySetInnerHTML={{ __html: highlight(bioText, query) }}
+                              />
+                            )}
+                          </div>
+                        );
+                      })()}
                       {p.slug && (
                         <div className="profile-link-row">
                           <a className="profile-link-btn" href={`/${p.slug}`}>
