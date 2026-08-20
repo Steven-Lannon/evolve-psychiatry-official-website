@@ -9,6 +9,15 @@ import { getAccurateRole } from "../../../lib/roles";
 // still showing live team data -- fetching from this fast, cached
 // endpoint instead of hitting Google Sheets directly from the browser,
 // which was the original slow/inconsistent loading problem.
+//
+// IMPORTANT: the Squarespace pages call this endpoint cross-origin
+// (evolvepsychiatry.com -> this Vercel deployment), so every response
+// needs an Access-Control-Allow-Origin header or the browser will block
+// the request entirely (it will look identical to a network failure --
+// the fetch's .catch() fires with no useful error visible in Console,
+// only in the Network tab).
+const ALLOWED_ORIGIN = "https://evolvepsychiatry.com";
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const location = (searchParams.get("location") || "").trim();
@@ -16,7 +25,13 @@ export async function GET(request) {
   if (!location) {
     return new Response(
       JSON.stringify({ error: "Missing location parameter" }),
-      { status: 400, headers: { "Content-Type": "application/json" } }
+      {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+        },
+      }
     );
   }
 
@@ -69,6 +84,7 @@ export async function GET(request) {
       headers: {
         "Content-Type": "application/json",
         "Cache-Control": "public, max-age=1800, stale-while-revalidate=3600",
+        "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
       },
     }
   );
