@@ -390,6 +390,12 @@ function MobileMenu({ open, onClose }) {
 // Our own styles for the nav bar, so a Squarespace CSS update can't
 // change how the Register button or the bar's spacing looks.
 const HEADER_OVERRIDES = `
+  /* A little extra height on the nav bar */
+  #header .header-display-desktop {
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+  }
+
   /* Keep the button from being squeezed or pushed off the right edge */
   #header .header-display-desktop .header-actions {
     flex-shrink: 0 !important;
