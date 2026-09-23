@@ -62,6 +62,8 @@ export default async function TherapistsPage() {
             linkText: "Click here to see our Prescribers",
           }}
           description="Our therapists offer a supportive space where you can talk openly, work through life's challenges, and build the tools you need to feel your best. Whether you're navigating a tough season or working toward long-term growth, they'll meet you where you are."
+          heroImage="https://images.squarespace-cdn.com/content/v1/6525fe2f00c9de2ec400ea4f/f0047a42-ac11-4086-92ca-ddb10ea439ae/mental-health-therapy.jpg?format=1000w"
+          heroImageAlt="Talk therapy session"
         />
       </Suspense>
     </>
