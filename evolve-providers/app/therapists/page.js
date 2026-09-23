@@ -61,6 +61,7 @@ export default async function TherapistsPage() {
             href: "/prescribers",
             linkText: "Click here to see our Prescribers",
           }}
+          description="Our therapists offer a supportive space where you can talk openly, work through life's challenges, and build the tools you need to feel your best. Whether you're navigating a tough season or working toward long-term growth, they'll meet you where you are."
         />
       </Suspense>
     </>
