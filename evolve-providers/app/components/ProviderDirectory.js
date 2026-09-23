@@ -14,6 +14,7 @@ const LOCATION_STATE_MAP = {
   "garden city": "NY",
   hauppauge: "NY",
   massapequa: "NY",
+  patchogue: "NY",
   syosset: "NY",
   wilmington: "NC",
 };
@@ -50,7 +51,7 @@ function highlight(text, query) {
   );
 }
 
-export default function ProviderDirectory({ providers, typeLabel, heading, crossLink }) {
+export default function ProviderDirectory({ providers, typeLabel, heading, crossLink, description }) {
   const searchParams = useSearchParams();
 
   const [query, setQuery] = useState("");
@@ -190,6 +191,14 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
                 <strong>{crossLink.linkText}</strong>
               </a>
               .
+            </p>
+          )}
+          {description && (
+            <p
+              className="type-description"
+              style={{ maxWidth: 760, fontSize: 16, lineHeight: 1.6, color: "#5b6b72", margin: "0 0 24px 0" }}
+            >
+              {description}
             </p>
           )}
 
