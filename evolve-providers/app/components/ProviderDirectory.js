@@ -51,7 +51,7 @@ function highlight(text, query) {
   );
 }
 
-export default function ProviderDirectory({ providers, typeLabel, heading, crossLink, description }) {
+export default function ProviderDirectory({ providers, typeLabel, heading, crossLink, description, heroImage, heroImageAlt }) {
   const searchParams = useSearchParams();
 
   const [query, setQuery] = useState("");
@@ -183,24 +183,48 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
     <div className="pd-widget">
       <div className="page-bg">
         <div className="wrap">
-          <h1>{heading}</h1>
-          {description && (
-            <p
-              className="type-description"
-              style={{ maxWidth: 760, fontSize: 16, lineHeight: 1.6, color: "#5b6b72", margin: "0 0 12px 0" }}
-            >
-              {description}
-            </p>
-          )}
-          {crossLink && (
-            <p className="type-cross-link" style={{ marginTop: 0, marginBottom: 24 }}>
-              {crossLink.text}{" "}
-              <a href={crossLink.href}>
-                <strong>{crossLink.linkText}</strong>
-              </a>
-              .
-            </p>
-          )}
+          {/* Intro: heading, description and cross-link on the left, optional
+              photo on the right. The photo hides on narrow screens so the
+              text and filters get the full width on phones. */}
+          <style>{`
+            .pd-widget .intro-row { display: flex; align-items: center; gap: 48px; margin-bottom: 24px; }
+            .pd-widget .intro-text { flex: 1; min-width: 0; }
+            .pd-widget .intro-image {
+              flex: 0 0 420px; width: 420px; height: 260px;
+              object-fit: cover; border-radius: 14px; display: block;
+            }
+            @media (max-width: 1000px) {
+              .pd-widget .intro-image { flex-basis: 320px; width: 320px; height: 220px; }
+            }
+            @media (max-width: 800px) {
+              .pd-widget .intro-image { display: none; }
+            }
+          `}</style>
+          <div className="intro-row">
+            <div className="intro-text">
+              <h1>{heading}</h1>
+              {description && (
+                <p
+                  className="type-description"
+                  style={{ maxWidth: 760, fontSize: 16, lineHeight: 1.6, color: "#5b6b72", margin: "0 0 12px 0" }}
+                >
+                  {description}
+                </p>
+              )}
+              {crossLink && (
+                <p className="type-cross-link" style={{ margin: 0 }}>
+                  {crossLink.text}{" "}
+                  <a href={crossLink.href}>
+                    <strong>{crossLink.linkText}</strong>
+                  </a>
+                  .
+                </p>
+              )}
+            </div>
+            {heroImage && (
+              <img className="intro-image" src={heroImage} alt={heroImageAlt || ""} />
+            )}
+          </div>
 
           <div className="controls-row">
             <div className="search-bar">
