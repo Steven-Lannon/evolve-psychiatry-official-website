@@ -65,6 +65,8 @@ export default async function PrescribersPage() {
             linkText: "Click here to see our Therapists",
           }}
           description="Meet the prescribers who make up our medication management team. They take the time to get to know you, your history, and your goals, then work with you to find the right medication and adjust it as you go, supporting you every step of the way."
+          heroImage="https://images.squarespace-cdn.com/content/v1/6525fe2f00c9de2ec400ea4f/c9d65ded-5db5-4bc7-880a-d03ba919d86f/mental-health-prescribers.jpg?format=1000w"
+          heroImageAlt="Medication management appointment"
         />
       </Suspense>
     </>
