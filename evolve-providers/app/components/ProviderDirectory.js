@@ -187,8 +187,9 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
               photo on the right. The photo hides on narrow screens so the
               text and filters get the full width on phones. */}
           <style>{`
-            .pd-widget .intro-row { display: flex; align-items: center; gap: 48px; margin-bottom: 24px; }
+            .pd-widget .intro-row { display: flex; align-items: flex-start; gap: 48px; margin-bottom: 24px; }
             .pd-widget .intro-text { flex: 1; min-width: 0; }
+            .pd-widget .intro-text h1 { margin-top: 0; }
             .pd-widget .intro-image {
               flex: 0 0 420px; width: 420px; height: 260px;
               object-fit: cover; border-radius: 14px; display: block;
