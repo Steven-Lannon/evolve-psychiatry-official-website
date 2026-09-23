@@ -82,6 +82,7 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary" style
             <div class="header-nav-folder-item"><a href="/garden-city"><span class="header-nav-folder-item-content">Garden City, NY</span></a></div>
             <div class="header-nav-folder-item"><a href="/hauppauge"><span class="header-nav-folder-item-content">Hauppauge, NY</span></a></div>
             <div class="header-nav-folder-item"><a href="/massapequa"><span class="header-nav-folder-item-content">Massapequa, NY</span></a></div>
+            <div class="header-nav-folder-item"><a href="/patchogue"><span class="header-nav-folder-item-content">Patchogue, NY</span></a></div>
             <div class="header-nav-folder-item"><a href="/syosset"><span class="header-nav-folder-item-content">Syosset, NY</span></a></div>
             <div class="header-nav-folder-item"><a href="/wilmington"><span class="header-nav-folder-item-content">Wilmington, NC</span></a></div>
           </div>
@@ -129,7 +130,7 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary" style
 </div>
 <div class="header-actions header-actions--right">
   <div class="header-actions-action header-actions-action--cta">
-    <a class="btn btn--border theme-btn--primary-inverse sqs-button-element--secondary" href="/new-patient">Register Today</a>
+    <a class="btn btn--border theme-btn--primary-inverse sqs-button-element--secondary evolve-register-btn" href="/new-patient"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="7.5" r="4"></circle><path d="M1.5 20.5c0-4 3.4-7 7.5-7s7.5 3 7.5 7v.5h-15z"></path><path d="M19 8v6M16 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"></path></svg>Register Today</a>
   </div>
 </div>
 <div class="header-burger menu-overlay-has-visible-non-navigation-items">
@@ -194,6 +195,7 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary" style
             <div class="header-nav-folder-item"><a href="/garden-city"><span class="header-nav-folder-item-content">Garden City, NY</span></a></div>
             <div class="header-nav-folder-item"><a href="/hauppauge"><span class="header-nav-folder-item-content">Hauppauge, NY</span></a></div>
             <div class="header-nav-folder-item"><a href="/massapequa"><span class="header-nav-folder-item-content">Massapequa, NY</span></a></div>
+            <div class="header-nav-folder-item"><a href="/patchogue"><span class="header-nav-folder-item-content">Patchogue, NY</span></a></div>
             <div class="header-nav-folder-item"><a href="/syosset"><span class="header-nav-folder-item-content">Syosset, NY</span></a></div>
             <div class="header-nav-folder-item"><a href="/wilmington"><span class="header-nav-folder-item-content">Wilmington, NC</span></a></div>
           </div>
@@ -291,6 +293,7 @@ const NAV_LINKS = [
       { label: "Garden City, NY", href: "/garden-city" },
       { label: "Hauppauge, NY", href: "/hauppauge" },
       { label: "Massapequa, NY", href: "/massapequa" },
+      { label: "Patchogue, NY", href: "/patchogue" },
       { label: "Syosset, NY", href: "/syosset" },
       { label: "Wilmington, NC", href: "/wilmington" },
     ],
@@ -384,9 +387,71 @@ function MobileMenu({ open, onClose }) {
   );
 }
 
+// Our own styles for the nav bar, so a Squarespace CSS update can't
+// change how the Register button or the bar's spacing looks.
+const HEADER_OVERRIDES = `
+  /* Taller nav bar */
+  #header .header-inner {
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+  }
+
+  /* Keep the button from being squeezed or pushed off the right edge */
+  #header .header-display-desktop .header-actions {
+    flex-shrink: 0 !important;
+    margin-left: 24px !important;
+  }
+
+  /* Register Today: navy pill with icon */
+  #header .header-display-desktop .evolve-register-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    background: #22345a !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 999px !important;
+    padding: 16px 30px !important;
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    box-shadow: none !important;
+    transition: background 0.15s ease !important;
+  }
+  #header .header-display-desktop .evolve-register-btn:hover {
+    background: #16223c !important;
+    color: #fff !important;
+    opacity: 1 !important;
+  }
+  #header .header-display-desktop .evolve-register-btn svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+`;
+
 export default function SiteHeader() {
   const rootRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  // Space reserved under the fixed header. Measured from the real header
+  // so content never slides under it when the bar's height changes.
+  const [headerHeight, setHeaderHeight] = useState(156);
+
+  useEffect(() => {
+    const header = rootRef.current && rootRef.current.querySelector("#header");
+    if (!header || typeof ResizeObserver === "undefined") return;
+    const update = () => {
+      if (header.offsetHeight > 0) setHeaderHeight(header.offsetHeight);
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(header);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -410,8 +475,9 @@ export default function SiteHeader() {
 
   return (
     <>
+      <style>{HEADER_OVERRIDES}</style>
       <div ref={rootRef} dangerouslySetInnerHTML={{ __html: HEADER_HTML }} />
-      <div style={{ height: 140 }} aria-hidden="true" />
+      <div style={{ height: headerHeight }} aria-hidden="true" />
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
     </>
   );
