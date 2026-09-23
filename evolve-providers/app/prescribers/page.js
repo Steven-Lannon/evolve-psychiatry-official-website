@@ -64,6 +64,7 @@ export default async function PrescribersPage() {
             href: "/therapists",
             linkText: "Click here to see our Therapists",
           }}
+          description="Meet the prescribers who make up our medication management team. They take the time to get to know you, your history, and your goals, then work with you to find the right medication and adjust it as you go, supporting you every step of the way."
         />
       </Suspense>
     </>
