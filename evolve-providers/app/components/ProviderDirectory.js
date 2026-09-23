@@ -183,35 +183,22 @@ export default function ProviderDirectory({ providers, typeLabel, heading, cross
     <div className="pd-widget">
       <div className="page-bg">
         <div className="wrap">
-          <div
-            className="heading-row"
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "baseline",
-              justifyContent: "space-between",
-              columnGap: 24,
-              rowGap: 4,
-              marginBottom: 16,
-            }}
-          >
-            <h1 style={{ margin: 0 }}>{heading}</h1>
-            {crossLink && (
-              <p className="type-cross-link" style={{ margin: 0 }}>
-                {crossLink.text}{" "}
-                <a href={crossLink.href}>
-                  <strong>{crossLink.linkText}</strong>
-                </a>
-                .
-              </p>
-            )}
-          </div>
+          <h1>{heading}</h1>
           {description && (
             <p
               className="type-description"
-              style={{ maxWidth: 760, fontSize: 16, lineHeight: 1.6, color: "#5b6b72", margin: "0 0 24px 0" }}
+              style={{ maxWidth: 760, fontSize: 16, lineHeight: 1.6, color: "#5b6b72", margin: "0 0 12px 0" }}
             >
               {description}
+            </p>
+          )}
+          {crossLink && (
+            <p className="type-cross-link" style={{ marginTop: 0, marginBottom: 24 }}>
+              {crossLink.text}{" "}
+              <a href={crossLink.href}>
+                <strong>{crossLink.linkText}</strong>
+              </a>
+              .
             </p>
           )}
 
