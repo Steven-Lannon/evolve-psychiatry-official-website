@@ -130,7 +130,7 @@ const HEADER_HTML = `<header id="header" class="header theme-col--primary" style
 </div>
 <div class="header-actions header-actions--right">
   <div class="header-actions-action header-actions-action--cta">
-    <a class="btn btn--border theme-btn--primary-inverse sqs-button-element--secondary evolve-register-btn" href="/new-patient"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="7.5" r="4"></circle><path d="M1.5 20.5c0-4 3.4-7 7.5-7s7.5 3 7.5 7v.5h-15z"></path><path d="M19 8v6M16 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"></path></svg>Register Today</a>
+    <a class="btn btn--border theme-btn--primary-inverse sqs-button-element--secondary evolve-register-btn" href="/new-patient">Register Today</a>
   </div>
 </div>
 <div class="header-burger menu-overlay-has-visible-non-navigation-items">
@@ -390,29 +390,23 @@ function MobileMenu({ open, onClose }) {
 // Our own styles for the nav bar, so a Squarespace CSS update can't
 // change how the Register button or the bar's spacing looks.
 const HEADER_OVERRIDES = `
-  /* Taller nav bar */
-  #header .header-inner {
-    padding-top: 16px !important;
-    padding-bottom: 16px !important;
-  }
-
   /* Keep the button from being squeezed or pushed off the right edge */
   #header .header-display-desktop .header-actions {
     flex-shrink: 0 !important;
     margin-left: 24px !important;
   }
 
-  /* Register Today: navy pill with icon */
+  /* Register Today: navy pill (Squarespace supplies the icon) */
   #header .header-display-desktop .evolve-register-btn {
     display: inline-flex !important;
     align-items: center !important;
-    gap: 10px !important;
+    gap: 8px !important;
     background: #22345a !important;
     color: #fff !important;
     border: none !important;
     border-radius: 999px !important;
-    padding: 16px 30px !important;
-    font-size: 17px !important;
+    padding: 13px 26px !important;
+    font-size: 16px !important;
     font-weight: 600 !important;
     line-height: 1 !important;
     letter-spacing: 0 !important;
@@ -426,11 +420,6 @@ const HEADER_OVERRIDES = `
     background: #16223c !important;
     color: #fff !important;
     opacity: 1 !important;
-  }
-  #header .header-display-desktop .evolve-register-btn svg {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
   }
 `;
 
