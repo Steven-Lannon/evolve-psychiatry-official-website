@@ -184,6 +184,7 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
                 <p class="sqsrte-small"><a href="/testimonials">Testimonials</a></p>
                 <p class="sqsrte-small"><a href="/faq">FAQ</a></p>
                 <p class="sqsrte-small"><a href="/privacy-policy">Privacy Policy</a></p>
+                <p class="sqsrte-small"><a href="/notice-of-privacy-practices">Notice of Privacy Practices</a></p>
               </div>
             </div>
 
