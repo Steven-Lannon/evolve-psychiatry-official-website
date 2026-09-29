@@ -135,6 +135,16 @@ export default function SiteHeader() {
       <header className="ep-header">
         <div className="ep-announcement">
           <a href="tel:+18444432563" className="ep-announcement-link">
+            <svg
+              viewBox="0 0 24 24"
+              width="13"
+              height="13"
+              fill="currentColor"
+              aria-hidden="true"
+              className="ep-phone-icon"
+            >
+              <path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.9 21 3 13.1 3 3.4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z" />
+            </svg>
             Call Us 1-844-4HEALME
           </a>
         </div>
@@ -176,6 +186,22 @@ export default function SiteHeader() {
 
           <div className="ep-actions">
             <a href="/new-patient" className="ep-cta">
+              <svg
+                viewBox="0 0 24 24"
+                width="15"
+                height="15"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <line x1="19" y1="8" x2="19" y2="14" />
+                <line x1="16" y1="11" x2="22" y2="11" />
+              </svg>
               Register Today
             </a>
             <button
@@ -203,22 +229,27 @@ export default function SiteHeader() {
           font-family: 'Poppins', sans-serif;
         }
         .ep-announcement {
-          background: #4a5568;
+          background: #6b6259;
           text-align: center;
-          padding: 8px 16px;
+          padding: 7px 16px;
         }
         .ep-announcement-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
           color: #fff;
           text-decoration: none;
           font-size: 13px;
           letter-spacing: 0.02em;
         }
+        .ep-phone-icon {
+          flex-shrink: 0;
+        }
         .ep-navbar {
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          padding: 14px 32px;
-          gap: 24px;
+          padding: 16px 32px;
+          gap: 40px;
           border-bottom: 1px solid #eee;
         }
         .ep-logo img {
@@ -230,8 +261,6 @@ export default function SiteHeader() {
           display: flex;
           align-items: center;
           gap: 28px;
-          flex: 1;
-          justify-content: center;
           flex-wrap: wrap;
         }
         .ep-nav-item {
@@ -241,7 +270,7 @@ export default function SiteHeader() {
           color: #1a1a1a;
           text-decoration: none;
           font-size: 15px;
-          font-weight: 500;
+          font-weight: 400;
           white-space: nowrap;
           padding: 8px 0;
         }
@@ -278,6 +307,7 @@ export default function SiteHeader() {
           display: flex;
           align-items: center;
           gap: 16px;
+          margin-left: auto;
         }
         .ep-cta {
           display: inline-flex;
