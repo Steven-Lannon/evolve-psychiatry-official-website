@@ -1,269 +1,15 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 
-// Real Squarespace header markup (desktop + mobile layout blocks) minus
-// Squarespace's own mobile overlay menu, which depended on JS/inline
-// styles we don't have and was rendering broken (see project history).
-// The mobile menu below is a simple, fully custom overlay instead --
-// same links, same rough styling, but zero dependency on unknown
-// Squarespace behavior, so it just works.
-const HEADER_HTML = `<header id="header" class="header theme-col--primary" style="
-  --headerDropShadowColor: hsla(var(--black-hsl), 1);
-  --headerBorderColor: hsla(var(--black-hsl), 1);
-  --solidHeaderBackgroundColor: hsla(var(--white-hsl), 1);
-  --solidHeaderNavigationColor: hsla(var(--black-hsl), 1);
-">
-  <svg style="display:none" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
-    <symbol id="closedArrowHead" viewBox="0 0 22 22"><path d="M18 7L11 15L4 7L18 7Z" fill="none" stroke="inherit"></path></symbol>
-    <symbol id="openArrowHead"><path d="M18 7L11 14L4 7" fill="none"></path></symbol>
-  </svg>
-
-  <div class="sqs-announcement-bar-dropzone"><div class="sqs-announcement-bar-custom-location"><div class="yui3-widget sqs-widget sqs-announcement-bar"><div class="sqs-announcement-bar-content"><a class="sqs-announcement-bar-url" href="tel:+18444432563" aria-labelledby="announcement-bar-text-inner-id"></a>
-  <div class="sqs-announcement-bar-text">
-    <div id="announcement-bar-text-inner-id" class="sqs-announcement-bar-text-inner">
-      <p style="white-space: pre-wrap;">Call Us 1-844-4HEALME</p>
-    </div>
-  </div></div></div></div></div>
-
-  <div class="header-announcement-bar-wrapper">
-    <a href="#page" class="header-skip-link sqs-button-element--primary">Skip to Content</a>
-    <div class="header-border" data-header-style="solid" data-header-border="false"></div>
-    <div class="header-dropshadow" data-header-style="solid" data-header-dropshadow="true" style="box-shadow: 0px 10px 10px -5px;"></div>
-    <div><div class="header-background-solid" data-header-style="solid" style="opacity: calc(100 * .01)"></div></div>
-
-    <div class="header-inner container--fluid header-mobile-layout-logo-left-nav-right header-layout-nav-left">
-      <div class="header-background theme-bg--primary"></div>
-
-      <div class="header-display-desktop" data-content-field="site-title">
-<div class="header-title-nav-wrapper">
-  <div class="header-title">
-    <div class="header-title-logo">
-      <a href="/">
-        <img src="//images.squarespace-cdn.com/content/v1/6525fe2f00c9de2ec400ea4f/543bd20d-27e9-4baa-817b-fe18c5434f79/evolve+new+logo+with+name.jpg?format=1500w" alt="Evolve Psychiatry" style="display:block" loading="eager" decoding="async">
-      </a>
-    </div>
-  </div>
-  <div class="header-nav">
-    <div class="header-nav-wrapper">
-      <nav class="header-nav-list">
-        <div class="header-nav-item header-nav-item--collection">
-          <a href="/">Home</a>
-        </div>
-        <div class="header-nav-item header-nav-item--folder">
-          <a class="header-nav-folder-title" href="/services" aria-controls="services">
-            <span class="header-nav-folder-title-text">Services</span>
-          </a>
-          <div class="header-nav-folder-content" id="services">
-            <div class="header-nav-folder-item"><a href="/conditions-we-treat"><span class="header-nav-folder-item-content">Conditions We Treat</span></a></div>
-            <div class="header-nav-folder-item"><a href="/medication-management"><span class="header-nav-folder-item-content">Medication Management</span></a></div>
-            <div class="header-nav-folder-item"><a href="/talk-therapy"><span class="header-nav-folder-item-content">Talk Therapy Counseling</span></a></div>
-            <div class="header-nav-folder-item"><a href="/tms"><span class="header-nav-folder-item-content">TMS Therapy</span></a></div>
-            <div class="header-nav-folder-item"><a href="/spravato"><span class="header-nav-folder-item-content">SPRAVATO&reg;</span></a></div>
-            <div class="header-nav-folder-item"><a href="/telehealth"><span class="header-nav-folder-item-content">Telehealth Appointments</span></a></div>
-            <div class="header-nav-folder-item"><a href="/genesight"><span class="header-nav-folder-item-content">GeneSight Testing</span></a></div>
-          </div>
-        </div>
-        <div class="header-nav-item header-nav-item--folder">
-          <a class="header-nav-folder-title" href="/clinicians" aria-controls="clinicians">
-            <span class="header-nav-folder-title-text">Clinicians</span>
-          </a>
-          <div class="header-nav-folder-content" id="clinicians">
-            <div class="header-nav-folder-item"><a href="/prescribers"><span class="header-nav-folder-item-content">Our Prescribers</span></a></div>
-            <div class="header-nav-folder-item"><a href="/therapists"><span class="header-nav-folder-item-content">Our Therapists</span></a></div>
-          </div>
-        </div>
-        <div class="header-nav-item header-nav-item--folder">
-          <a class="header-nav-folder-title" href="/locations" aria-controls="locations">
-            <span class="header-nav-folder-title-text">Locations</span>
-          </a>
-          <div class="header-nav-folder-content" id="locations">
-            <div class="header-nav-folder-item"><a href="/albany"><span class="header-nav-folder-item-content">Albany, NY</span></a></div>
-            <div class="header-nav-folder-item"><a href="/garden-city"><span class="header-nav-folder-item-content">Garden City, NY</span></a></div>
-            <div class="header-nav-folder-item"><a href="/hauppauge"><span class="header-nav-folder-item-content">Hauppauge, NY</span></a></div>
-            <div class="header-nav-folder-item"><a href="/massapequa"><span class="header-nav-folder-item-content">Massapequa, NY</span></a></div>
-            <div class="header-nav-folder-item"><a href="/patchogue"><span class="header-nav-folder-item-content">Patchogue, NY</span></a></div>
-            <div class="header-nav-folder-item"><a href="/syosset"><span class="header-nav-folder-item-content">Syosset, NY</span></a></div>
-            <div class="header-nav-folder-item"><a href="/wilmington"><span class="header-nav-folder-item-content">Wilmington, NC</span></a></div>
-          </div>
-        </div>
-        <div class="header-nav-item header-nav-item--folder">
-          <button class="header-nav-folder-title" data-href="/resources" aria-expanded="false" aria-controls="patient-resources">
-            <span class="header-nav-folder-title-text">Patient Resources</span>
-          </button>
-          <div class="header-nav-folder-content" id="patient-resources">
-            <div class="header-nav-folder-item"><a href="/new-patient"><span class="header-nav-folder-item-content">New Patient Registration</span></a></div>
-            <div class="header-nav-folder-item"><a href="/portal"><span class="header-nav-folder-item-content">Patient Portal</span></a></div>
-            <div class="header-nav-folder-item"><a href="/fullscript"><span class="header-nav-folder-item-content">Order Supplements</span></a></div>
-            <div class="header-nav-folder-item"><a href="/patient-scales-packet"><span class="header-nav-folder-item-content">Patient Scales</span></a></div>
-            <div class="header-nav-folder-item"><a href="/hipaa-release"><span class="header-nav-folder-item-content">HIPAA Release</span></a></div>
-            <div class="header-nav-folder-item"><a href="/prior-authorization"><span class="header-nav-folder-item-content">Prior Auth Request</span></a></div>
-            <div class="header-nav-folder-item"><a href="/testimonials"><span class="header-nav-folder-item-content">Testimonials</span></a></div>
-            <div class="header-nav-folder-item"><a href="/faq"><span class="header-nav-folder-item-content">FAQ</span></a></div>
-          </div>
-        </div>
-        <div class="header-nav-item header-nav-item--folder">
-          <button class="header-nav-folder-title" data-href="/referrals-1" aria-expanded="false" aria-controls="referrals">
-            <span class="header-nav-folder-title-text">Referrals</span>
-          </button>
-          <div class="header-nav-folder-content" id="referrals">
-            <div class="header-nav-folder-item"><a href="/refer-patient"><span class="header-nav-folder-item-content">Refer A Patient</span></a></div>
-            <div class="header-nav-folder-item"><a href="/our-referrals"><span class="header-nav-folder-item-content">Our Referrals</span></a></div>
-          </div>
-        </div>
-        <div class="header-nav-item header-nav-item--folder">
-          <button class="header-nav-folder-title" data-href="/billing" aria-expanded="false" aria-controls="billing">
-            <span class="header-nav-folder-title-text">Billing</span>
-          </button>
-          <div class="header-nav-folder-content" id="billing">
-            <div class="header-nav-folder-item"><a href="/insurances"><span class="header-nav-folder-item-content">Insurances &amp; Rates</span></a></div>
-            <div class="header-nav-folder-item"><a href="/update-insurance"><span class="header-nav-folder-item-content">Update Insurance</span></a></div>
-            <div class="header-nav-folder-item header-nav-folder-item--external"><a href="https://mycw197.ecwcloud.com/portal24839/jsp/100mp/login_otp.jsp" target="_blank">Make A Payment</a></div>
-          </div>
-        </div>
-        <div class="header-nav-item header-nav-item--collection"><a href="/about">About</a></div>
-        <div class="header-nav-item header-nav-item--collection"><a href="/blog">Blog</a></div>
-        <div class="header-nav-item header-nav-item--collection"><a href="/contact">Contact</a></div>
-      </nav>
-    </div>
-  </div>
-</div>
-<div class="header-actions header-actions--right">
-  <div class="header-actions-action header-actions-action--cta">
-    <a class="btn btn--border theme-btn--primary-inverse sqs-button-element--secondary evolve-register-btn" href="/new-patient">Register Today</a>
-  </div>
-</div>
-<div class="header-burger menu-overlay-has-visible-non-navigation-items">
-  <button class="header-burger-btn burger" data-test="header-burger">
-    <span class="js-header-burger-open-title visually-hidden">Open Menu</span>
-    <span hidden class="js-header-burger-close-title visually-hidden">Close Menu</span>
-    <div class="burger-box">
-      <div class="burger-inner header-menu-icon-doubleLineHamburger">
-        <div class="top-bun"></div>
-        <div class="patty"></div>
-        <div class="bottom-bun"></div>
-      </div>
-    </div>
-  </button>
-</div>
-
-      </div>
-
-      <div class="header-display-mobile" data-content-field="site-title">
-<div class="header-title-nav-wrapper">
-  <div class="header-title">
-    <div class="header-title-logo">
-      <a href="/">
-        <img src="//images.squarespace-cdn.com/content/v1/6525fe2f00c9de2ec400ea4f/543bd20d-27e9-4baa-817b-fe18c5434f79/evolve+new+logo+with+name.jpg?format=1500w" alt="Evolve Psychiatry" style="display:block" loading="eager" decoding="async">
-      </a>
-    </div>
-  </div>
-  <div class="header-nav">
-    <div class="header-nav-wrapper">
-      <nav class="header-nav-list">
-        <div class="header-nav-item header-nav-item--collection">
-          <a href="/">Home</a>
-        </div>
-        <div class="header-nav-item header-nav-item--folder">
-          <button class="header-nav-folder-title" data-href="/services-folder/" aria-expanded="false" aria-controls="services-m">
-            <span class="header-nav-folder-title-text">Services</span>
-          </button>
-          <div class="header-nav-folder-content" id="services-m">
-            <div class="header-nav-folder-item"><a href="/medication-management"><span class="header-nav-folder-item-content">Medication Management</span></a></div>
-            <div class="header-nav-folder-item"><a href="/talk-therapy"><span class="header-nav-folder-item-content">Talk Therapy Counseling</span></a></div>
-            <div class="header-nav-folder-item"><a href="/tms"><span class="header-nav-folder-item-content">TMS Therapy</span></a></div>
-            <div class="header-nav-folder-item"><a href="/spravato"><span class="header-nav-folder-item-content">SPRAVATO&reg;</span></a></div>
-            <div class="header-nav-folder-item"><a href="/telehealth"><span class="header-nav-folder-item-content">Telehealth Appointments</span></a></div>
-            <div class="header-nav-folder-item"><a href="/genesight"><span class="header-nav-folder-item-content">GeneSight Testing</span></a></div>
-          </div>
-        </div>
-        <div class="header-nav-item header-nav-item--folder">
-          <button class="header-nav-folder-title" data-href="/clinicians-folder/" aria-expanded="false" aria-controls="clinicians-m">
-            <span class="header-nav-folder-title-text">Clinicians</span>
-          </button>
-          <div class="header-nav-folder-content" id="clinicians-m">
-            <div class="header-nav-folder-item"><a href="/prescribers"><span class="header-nav-folder-item-content">Our Prescribers</span></a></div>
-            <div class="header-nav-folder-item"><a href="/therapists"><span class="header-nav-folder-item-content">Our Therapists</span></a></div>
-          </div>
-        </div>
-        <div class="header-nav-item header-nav-item--folder">
-          <button class="header-nav-folder-title" data-href="/locations-folder/" aria-expanded="false" aria-controls="locations-m">
-            <span class="header-nav-folder-title-text">Locations</span>
-          </button>
-          <div class="header-nav-folder-content" id="locations-m">
-            <div class="header-nav-folder-item"><a href="/albany"><span class="header-nav-folder-item-content">Albany, NY</span></a></div>
-            <div class="header-nav-folder-item"><a href="/garden-city"><span class="header-nav-folder-item-content">Garden City, NY</span></a></div>
-            <div class="header-nav-folder-item"><a href="/hauppauge"><span class="header-nav-folder-item-content">Hauppauge, NY</span></a></div>
-            <div class="header-nav-folder-item"><a href="/massapequa"><span class="header-nav-folder-item-content">Massapequa, NY</span></a></div>
-            <div class="header-nav-folder-item"><a href="/patchogue"><span class="header-nav-folder-item-content">Patchogue, NY</span></a></div>
-            <div class="header-nav-folder-item"><a href="/syosset"><span class="header-nav-folder-item-content">Syosset, NY</span></a></div>
-            <div class="header-nav-folder-item"><a href="/wilmington"><span class="header-nav-folder-item-content">Wilmington, NC</span></a></div>
-          </div>
-        </div>
-        <div class="header-nav-item header-nav-item--folder">
-          <button class="header-nav-folder-title" data-href="/resources" aria-expanded="false" aria-controls="patient-resources-m">
-            <span class="header-nav-folder-title-text">Patient Resources</span>
-          </button>
-          <div class="header-nav-folder-content" id="patient-resources-m">
-            <div class="header-nav-folder-item"><a href="/new-patient"><span class="header-nav-folder-item-content">New Patient Registration</span></a></div>
-            <div class="header-nav-folder-item"><a href="/portal"><span class="header-nav-folder-item-content">Patient Portal</span></a></div>
-            <div class="header-nav-folder-item"><a href="/fullscript"><span class="header-nav-folder-item-content">Order Supplements</span></a></div>
-            <div class="header-nav-folder-item"><a href="/patient-scales-packet"><span class="header-nav-folder-item-content">Patient Scales</span></a></div>
-            <div class="header-nav-folder-item"><a href="/hipaa-release"><span class="header-nav-folder-item-content">HIPAA Release</span></a></div>
-            <div class="header-nav-folder-item"><a href="/prior-authorization"><span class="header-nav-folder-item-content">Prior Auth Request</span></a></div>
-            <div class="header-nav-folder-item"><a href="/testimonials"><span class="header-nav-folder-item-content">Testimonials</span></a></div>
-            <div class="header-nav-folder-item"><a href="/faq"><span class="header-nav-folder-item-content">FAQ</span></a></div>
-          </div>
-        </div>
-        <div class="header-nav-item header-nav-item--folder">
-          <button class="header-nav-folder-title" data-href="/referrals-1" aria-expanded="false" aria-controls="referrals-m">
-            <span class="header-nav-folder-title-text">Referrals</span>
-          </button>
-          <div class="header-nav-folder-content" id="referrals-m">
-            <div class="header-nav-folder-item"><a href="/refer-patient"><span class="header-nav-folder-item-content">Refer A Patient</span></a></div>
-            <div class="header-nav-folder-item"><a href="/our-referrals"><span class="header-nav-folder-item-content">Our Referrals</span></a></div>
-          </div>
-        </div>
-        <div class="header-nav-item header-nav-item--folder">
-          <button class="header-nav-folder-title" data-href="/billing" aria-expanded="false" aria-controls="billing-m">
-            <span class="header-nav-folder-title-text">Billing</span>
-          </button>
-          <div class="header-nav-folder-content" id="billing-m">
-            <div class="header-nav-folder-item"><a href="/insurances"><span class="header-nav-folder-item-content">Insurances &amp; Rates</span></a></div>
-            <div class="header-nav-folder-item"><a href="/update-insurance"><span class="header-nav-folder-item-content">Update Insurance</span></a></div>
-            <div class="header-nav-folder-item header-nav-folder-item--external"><a href="https://mycw197.ecwcloud.com/portal24839/jsp/100mp/login_otp.jsp" target="_blank">Make A Payment</a></div>
-          </div>
-        </div>
-        <div class="header-nav-item header-nav-item--collection"><a href="/about">About</a></div>
-        <div class="header-nav-item header-nav-item--collection"><a href="/blog">Blog</a></div>
-        <div class="header-nav-item header-nav-item--collection"><a href="/contact">Contact</a></div>
-      </nav>
-    </div>
-  </div>
-</div>
-<div class="header-actions header-actions--right">
-  <div class="header-actions-action header-actions-action--cta">
-    <a class="btn btn--border theme-btn--primary-inverse sqs-button-element--secondary" href="/new-patient">Register Today</a>
-  </div>
-</div>
-<div class="header-burger menu-overlay-has-visible-non-navigation-items">
-  <button class="header-burger-btn burger" data-test="header-burger">
-    <span class="js-header-burger-open-title visually-hidden">Open Menu</span>
-    <span hidden class="js-header-burger-close-title visually-hidden">Close Menu</span>
-    <div class="burger-box">
-      <div class="burger-inner header-menu-icon-doubleLineHamburger">
-        <div class="top-bun"></div>
-        <div class="patty"></div>
-        <div class="bottom-bun"></div>
-      </div>
-    </div>
-  </button>
-</div>
-
-      </div>
-    </div>
-  </div>
-</header>`;
+// Fully self-contained header. Unlike the old version, this does NOT
+// reuse Squarespace's own HTML/CSS classes (.header, .btn,
+// .header-nav-list, etc.) or rely on any Squarespace-hosted stylesheet.
+// Every visual rule lives in the <style> block at the bottom of this
+// file, scoped under an "ep-" prefix. That means Squarespace changing
+// its nav markup, its CSS bundle hashes, or its button styling can
+// never break this page again -- there is nothing left here for them
+// to break.
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -293,7 +39,6 @@ const NAV_LINKS = [
       { label: "Garden City, NY", href: "/garden-city" },
       { label: "Hauppauge, NY", href: "/hauppauge" },
       { label: "Massapequa, NY", href: "/massapequa" },
-      { label: "Patchogue, NY", href: "/patchogue" },
       { label: "Syosset, NY", href: "/syosset" },
       { label: "Wilmington, NC", href: "/wilmington" },
     ],
@@ -335,32 +80,27 @@ const NAV_LINKS = [
   { label: "Contact", href: "/contact" },
 ];
 
+const LOGO_SRC =
+  "//images.squarespace-cdn.com/content/v1/6525fe2f00c9de2ec400ea4f/543bd20d-27e9-4baa-817b-fe18c5434f79/evolve+new+logo+with+name.jpg?format=1500w";
+
 function MobileMenu({ open, onClose }) {
   return (
-    <div className={`custom-mobile-menu ${open ? "custom-mobile-menu--open" : ""}`}>
-      <div className="custom-mobile-menu-topbar">
-        <img
-          src="//images.squarespace-cdn.com/content/v1/6525fe2f00c9de2ec400ea4f/543bd20d-27e9-4baa-817b-fe18c5434f79/evolve+new+logo+with+name.jpg?format=1500w"
-          alt="Evolve Psychiatry"
-          className="custom-mobile-menu-logo"
-        />
-        <button
-          className="custom-mobile-menu-close"
-          onClick={onClose}
-          aria-label="Close Menu"
-        >
+    <div className={`ep-mobile-menu ${open ? "ep-mobile-menu--open" : ""}`}>
+      <div className="ep-mobile-menu-topbar">
+        <img src={LOGO_SRC} alt="Evolve Psychiatry" className="ep-mobile-menu-logo" />
+        <button className="ep-mobile-menu-close" onClick={onClose} aria-label="Close Menu">
           &times;
         </button>
       </div>
-      <nav className="custom-mobile-menu-nav">
+      <nav className="ep-mobile-menu-nav">
         {NAV_LINKS.map((item) =>
           item.children ? (
-            <details key={item.label} className="custom-mobile-menu-group">
+            <details key={item.label} className="ep-mobile-menu-group">
               <summary>
                 {item.label}
-                <span className="custom-mobile-menu-chevron">&#8250;</span>
+                <span className="ep-mobile-menu-chevron">&#8250;</span>
               </summary>
-              <div className="custom-mobile-menu-sublist">
+              <div className="ep-mobile-menu-sublist">
                 {item.children.map((child) => (
                   <a
                     key={child.label}
@@ -374,12 +114,12 @@ function MobileMenu({ open, onClose }) {
               </div>
             </details>
           ) : (
-            <a key={item.label} href={item.href} className="custom-mobile-menu-link">
+            <a key={item.label} href={item.href} className="ep-mobile-menu-link">
               {item.label}
             </a>
           )
         )}
-        <a href="/new-patient" className="custom-mobile-menu-cta">
+        <a href="/new-patient" className="ep-mobile-menu-cta">
           Register Today
         </a>
       </nav>
@@ -387,93 +127,279 @@ function MobileMenu({ open, onClose }) {
   );
 }
 
-// Our own styles for the nav bar, so a Squarespace CSS update can't
-// change how the Register button or the bar's spacing looks.
-const HEADER_OVERRIDES = `
-  /* A little extra height on the nav bar */
-  #header .header-display-desktop {
-    padding-top: 6px !important;
-    padding-bottom: 6px !important;
-  }
-
-  /* Keep the button from being squeezed or pushed off the right edge */
-  #header .header-display-desktop .header-actions {
-    flex-shrink: 0 !important;
-    margin-left: 24px !important;
-  }
-
-  /* Register Today: navy pill (Squarespace supplies the icon) */
-  #header .header-display-desktop .evolve-register-btn {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    background: #22345a !important;
-    color: #fff !important;
-    border: none !important;
-    border-radius: 999px !important;
-    padding: 13px 26px !important;
-    font-size: 16px !important;
-    font-weight: 600 !important;
-    line-height: 1 !important;
-    letter-spacing: 0 !important;
-    text-transform: none !important;
-    text-decoration: none !important;
-    white-space: nowrap !important;
-    box-shadow: none !important;
-    transition: background 0.15s ease !important;
-  }
-  #header .header-display-desktop .evolve-register-btn:hover {
-    background: #16223c !important;
-    color: #fff !important;
-    opacity: 1 !important;
-  }
-`;
-
 export default function SiteHeader() {
-  const rootRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  // Space reserved under the fixed header. Measured from the real header
-  // so content never slides under it when the bar's height changes.
-  const [headerHeight, setHeaderHeight] = useState(156);
-
-  useEffect(() => {
-    const header = rootRef.current && rootRef.current.querySelector("#header");
-    if (!header || typeof ResizeObserver === "undefined") return;
-    const update = () => {
-      if (header.offsetHeight > 0) setHeaderHeight(header.offsetHeight);
-    };
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(header);
-    return () => ro.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-
-    // Using event delegation on document (rather than attaching directly
-    // to each burger button) so the handler can't get silently detached
-    // if anything ever touches/replaces those specific button nodes --
-    // this listener lives on document for the component's whole lifetime.
-    function handleDocumentClick(e) {
-      if (e.target.closest(".header-burger-btn")) {
-        setMenuOpen(true);
-      }
-    }
-    document.addEventListener("click", handleDocumentClick);
-
-    return () => {
-      document.removeEventListener("click", handleDocumentClick);
-    };
-  }, []);
 
   return (
     <>
-      <style>{HEADER_OVERRIDES}</style>
-      <div ref={rootRef} dangerouslySetInnerHTML={{ __html: HEADER_HTML }} />
-      <div style={{ height: headerHeight }} aria-hidden="true" />
+      <header className="ep-header">
+        <div className="ep-announcement">
+          <a href="tel:+18444432563" className="ep-announcement-link">
+            Call Us 1-844-4HEALME
+          </a>
+        </div>
+
+        <div className="ep-navbar">
+          <a href="/" className="ep-logo">
+            <img src={LOGO_SRC} alt="Evolve Psychiatry" />
+          </a>
+
+          <nav className="ep-nav">
+            {NAV_LINKS.map((item) =>
+              item.children ? (
+                <div key={item.label} className="ep-nav-item ep-nav-item--folder">
+                  <a href={item.children[0].href} className="ep-nav-link">
+                    {item.label}
+                  </a>
+                  <div className="ep-dropdown">
+                    {item.children.map((child) => (
+                      <a
+                        key={child.label}
+                        href={child.href}
+                        target={child.external ? "_blank" : undefined}
+                        rel={child.external ? "noopener noreferrer" : undefined}
+                      >
+                        {child.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div key={item.label} className="ep-nav-item">
+                  <a href={item.href} className="ep-nav-link">
+                    {item.label}
+                  </a>
+                </div>
+              )
+            )}
+          </nav>
+
+          <div className="ep-actions">
+            <a href="/new-patient" className="ep-cta">
+              Register Today
+            </a>
+            <button
+              className="ep-burger"
+              aria-label="Open Menu"
+              onClick={() => setMenuOpen(true)}
+              type="button"
+            >
+              <span />
+              <span />
+              <span />
+            </button>
+          </div>
+        </div>
+      </header>
+
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+
+      <style>{`
+        .ep-header {
+          position: sticky;
+          top: 0;
+          z-index: 999;
+          background: #fff;
+          font-family: 'Poppins', sans-serif;
+        }
+        .ep-announcement {
+          background: #4a5568;
+          text-align: center;
+          padding: 8px 16px;
+        }
+        .ep-announcement-link {
+          color: #fff;
+          text-decoration: none;
+          font-size: 13px;
+          letter-spacing: 0.02em;
+        }
+        .ep-navbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 14px 32px;
+          gap: 24px;
+          border-bottom: 1px solid #eee;
+        }
+        .ep-logo img {
+          display: block;
+          height: 40px;
+          width: auto;
+        }
+        .ep-nav {
+          display: flex;
+          align-items: center;
+          gap: 28px;
+          flex: 1;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+        .ep-nav-item {
+          position: relative;
+        }
+        .ep-nav-link {
+          color: #1a1a1a;
+          text-decoration: none;
+          font-size: 15px;
+          font-weight: 500;
+          white-space: nowrap;
+          padding: 8px 0;
+        }
+        .ep-nav-link:hover {
+          color: #1c2b4a;
+        }
+        .ep-dropdown {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          background: #fff;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+          border-radius: 8px;
+          padding: 8px 0;
+          min-width: 220px;
+          z-index: 10;
+        }
+        .ep-nav-item--folder:hover .ep-dropdown {
+          display: block;
+        }
+        .ep-dropdown a {
+          display: block;
+          padding: 10px 18px;
+          color: #1a1a1a;
+          text-decoration: none;
+          font-size: 14px;
+          white-space: nowrap;
+        }
+        .ep-dropdown a:hover {
+          background: #f5f6f8;
+        }
+        .ep-actions {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+        .ep-cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: #1c2b4a;
+          color: #fff;
+          text-decoration: none;
+          padding: 12px 22px;
+          border-radius: 999px;
+          font-size: 14px;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+        .ep-cta:hover {
+          background: #142038;
+        }
+        .ep-burger {
+          display: none;
+          flex-direction: column;
+          gap: 5px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 8px;
+        }
+        .ep-burger span {
+          display: block;
+          width: 22px;
+          height: 2px;
+          background: #1a1a1a;
+        }
+
+        @media (max-width: 980px) {
+          .ep-nav {
+            display: none;
+          }
+          .ep-cta {
+            display: none;
+          }
+          .ep-burger {
+            display: flex;
+          }
+        }
+
+        .ep-mobile-menu {
+          position: fixed;
+          top: 0;
+          right: -100%;
+          width: 85%;
+          max-width: 360px;
+          height: 100%;
+          background: #fff;
+          z-index: 1000;
+          transition: right 0.25s ease;
+          overflow-y: auto;
+          box-shadow: -8px 0 24px rgba(0, 0, 0, 0.15);
+        }
+        .ep-mobile-menu--open {
+          right: 0;
+        }
+        .ep-mobile-menu-topbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px;
+          border-bottom: 1px solid #eee;
+        }
+        .ep-mobile-menu-logo {
+          height: 32px;
+        }
+        .ep-mobile-menu-close {
+          background: none;
+          border: none;
+          font-size: 28px;
+          line-height: 1;
+          cursor: pointer;
+        }
+        .ep-mobile-menu-nav {
+          display: flex;
+          flex-direction: column;
+          padding: 8px 16px 24px;
+        }
+        .ep-mobile-menu-link,
+        .ep-mobile-menu-group summary {
+          padding: 14px 4px;
+          border-bottom: 1px solid #f0f0f0;
+          color: #1a1a1a;
+          text-decoration: none;
+          font-size: 15px;
+          font-weight: 500;
+          cursor: pointer;
+          list-style: none;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .ep-mobile-menu-group summary::-webkit-details-marker {
+          display: none;
+        }
+        .ep-mobile-menu-sublist {
+          display: flex;
+          flex-direction: column;
+          padding-left: 12px;
+        }
+        .ep-mobile-menu-sublist a {
+          padding: 10px 4px;
+          color: #444;
+          text-decoration: none;
+          font-size: 14px;
+        }
+        .ep-mobile-menu-cta {
+          margin-top: 16px;
+          background: #1c2b4a;
+          color: #fff;
+          text-align: center;
+          padding: 14px;
+          border-radius: 999px;
+          text-decoration: none;
+          font-weight: 600;
+        }
+      `}</style>
     </>
   );
 }
