@@ -39,6 +39,7 @@ const NAV_LINKS = [
       { label: "Garden City, NY", href: "/garden-city" },
       { label: "Hauppauge, NY", href: "/hauppauge" },
       { label: "Massapequa, NY", href: "/massapequa" },
+      { label: "Patchogue, NY", href: "/patchogue" },
       { label: "Syosset, NY", href: "/syosset" },
       { label: "Wilmington, NC", href: "/wilmington" },
     ],
