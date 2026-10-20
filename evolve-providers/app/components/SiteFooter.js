@@ -7,6 +7,12 @@
 //
 // No client-side interactivity is needed here (unlike the header), so
 // this can stay a plain server component -- no "use client" required.
+//
+// Trust seals (Psychology Today + LegitScript) sit in the right-hand
+// column. The Psychology Today script is loaded with next/script because
+// <script> tags inside dangerouslySetInnerHTML are never executed.
+
+import Script from "next/script";
 
 const FOOTER_HTML = `<footer class="sections" id="footer-sections">
   <section data-section-theme="dark" class="page-section full-bleed-section background-width--full-bleed content-width--wide horizontal-alignment--center vertical-alignment--top dark">
@@ -127,6 +133,29 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
   .fe-block-footer-copyright .sqs-block { justify-content: center; }
   .fe-block-footer-copyright .sqs-block-alignment-wrapper { align-items: center; }
 }
+.fe-block-footer-seals {
+  grid-area: 14/6/19/10;
+  z-index: 5;
+}
+@media (min-width: 768px) {
+  .fe-block-footer-seals { grid-area: 5/18/9/24; z-index: 5; }
+}
+.fe-block-footer-seals .footer-seals {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+#footer-sections .footer-seals a {
+  text-decoration: none;
+}
+#footer-sections .footer-seals img {
+  display: block;
+  width: 73px;
+  height: 79px;
+  max-width: none;
+}
+
 .fe-block-footer-logo img {
   max-width: 60px;
 }
@@ -188,6 +217,20 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
               </div>
             </div>
 
+            <div class="fe-block fe-block-footer-seals">
+              <div class="sqs-block-content footer-seals">
+                <!-- Professional verification provided by Psychology Today -->
+                <a href="https://www.psychologytoday.com/profile/128152" class="sx-verified-seal"></a>
+                <!-- End Verification (script is loaded via next/script below) -->
+
+                <!-- LegitScript Certification -->
+                <a href="https://www.legitscript.com/websites/?checker_keywords=evolvepsychiatry.com" target="_blank" rel="noopener noreferrer" title="Verify LegitScript Approval for www.evolvepsychiatry.com">
+                  <img src="https://static.legitscript.com/seals/14910070.png" alt="Verify LegitScript Approval for www.evolvepsychiatry.com" width="73" height="79" />
+                </a>
+                <!-- End LegitScript -->
+              </div>
+            </div>
+
             <div class="fe-block fe-block-footer-copyright">
               <div class="sqs-block-content">
                 <p class="sqsrte-small"><em>Copyright &copy; 2026 All Rights Reserved Evolve Psychiatry.</em></p>
@@ -203,5 +246,19 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
 `;
 
 export default function SiteFooter() {
-  return <div dangerouslySetInnerHTML={{ __html: FOOTER_HTML }} />;
+  return (
+    <>
+      <div dangerouslySetInnerHTML={{ __html: FOOTER_HTML }} />
+      {/* Psychology Today seal script. Scripts inside dangerouslySetInnerHTML
+          never execute, so it has to be loaded with next/script instead. */}
+      <Script
+        id="psychology-today-verified-seal"
+        src="https://member.psychologytoday.com/verified-seal.js"
+        strategy="afterInteractive"
+        data-badge="13"
+        data-id="128152"
+        data-code="aHR0cHM6Ly93d3cucHN5Y2hvbG9neXRvZGF5LmNvbS9hcGkvdmVyaWZpZWQtc2VhbC9zZWFscy8xMy9wcm9maWxlLzEyODE1Mj9jYWxsYmFjaz1zeGNhbGxiYWNr"
+      />
+    </>
+  );
 }
