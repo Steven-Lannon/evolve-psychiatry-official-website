@@ -138,13 +138,13 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
   z-index: 5;
 }
 @media (min-width: 768px) {
-  .fe-block-footer-seals { grid-area: 5/18/9/24; z-index: 5; }
+  .fe-block-footer-seals { grid-area: 5/20/9/25; z-index: 5; }
 }
 .fe-block-footer-seals .footer-seals {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 18px;
 }
 #footer-sections .footer-seals a {
   text-decoration: none;
