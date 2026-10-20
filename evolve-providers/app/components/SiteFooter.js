@@ -9,10 +9,10 @@
 // this can stay a plain server component -- no "use client" required.
 //
 // Trust seals (Psychology Today + LegitScript) sit in the right-hand
-// column. The Psychology Today script is loaded with next/script because
-// <script> tags inside dangerouslySetInnerHTML are never executed.
+// column. <script> tags inside dangerouslySetInnerHTML are never executed,
+// so the Psychology Today script is injected by <PsychologyTodaySeal />.
 
-import Script from "next/script";
+import PsychologyTodaySeal from "./PsychologyTodaySeal";
 
 const FOOTER_HTML = `<footer class="sections" id="footer-sections">
   <section data-section-theme="dark" class="page-section full-bleed-section background-width--full-bleed content-width--wide horizontal-alignment--center vertical-alignment--top dark">
@@ -221,7 +221,7 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
               <div class="sqs-block-content footer-seals">
                 <!-- Professional verification provided by Psychology Today -->
                 <a href="https://www.psychologytoday.com/profile/128152" class="sx-verified-seal"></a>
-                <!-- End Verification (script is loaded via next/script below) -->
+                <!-- End Verification (script is injected by PsychologyTodaySeal.js) -->
 
                 <!-- LegitScript Certification -->
                 <a href="https://www.legitscript.com/websites/?checker_keywords=evolvepsychiatry.com" target="_blank" rel="noopener noreferrer" title="Verify LegitScript Approval for www.evolvepsychiatry.com">
@@ -249,16 +249,7 @@ export default function SiteFooter() {
   return (
     <>
       <div dangerouslySetInnerHTML={{ __html: FOOTER_HTML }} />
-      {/* Psychology Today seal script. Scripts inside dangerouslySetInnerHTML
-          never execute, so it has to be loaded with next/script instead. */}
-      <Script
-        id="psychology-today-verified-seal"
-        src="https://member.psychologytoday.com/verified-seal.js"
-        strategy="afterInteractive"
-        data-badge="13"
-        data-id="128152"
-        data-code="aHR0cHM6Ly93d3cucHN5Y2hvbG9neXRvZGF5LmNvbS9hcGkvdmVyaWZpZWQtc2VhbC9zZWFscy8xMy9wcm9maWxlLzEyODE1Mj9jYWxsYmFjaz1zeGNhbGxiYWNr"
-      />
+      <PsychologyTodaySeal />
     </>
   );
 }
