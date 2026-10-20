@@ -1,5 +1,5 @@
-// Real Squarespace footer markup: logo, link columns, social icons,
-// Psychology Today badge, and copyright -- pulled directly from the
+// Real Squarespace footer markup: logo, link columns, LegitScript seal,
+// and copyright -- pulled directly from the
 // homepage source. The two "mega-menu" sections (Patient Resources,
 // Prescribers/Therapists) that depend on Squarespace's own JS to
 // populate are intentionally left out; this component only includes
@@ -8,11 +8,7 @@
 // No client-side interactivity is needed here (unlike the header), so
 // this can stay a plain server component -- no "use client" required.
 //
-// Trust seals (Psychology Today + LegitScript) sit in the right-hand
-// column. <script> tags inside dangerouslySetInnerHTML are never executed,
-// so the Psychology Today script is injected by <PsychologyTodaySeal />.
-
-import PsychologyTodaySeal from "./PsychologyTodaySeal";
+// LegitScript seal sits just to the right of the third link column.
 
 const FOOTER_HTML = `<footer class="sections" id="footer-sections">
   <section data-section-theme="dark" class="page-section full-bleed-section background-width--full-bleed content-width--wide horizontal-alignment--center vertical-alignment--top dark">
@@ -138,7 +134,7 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
   z-index: 5;
 }
 @media (min-width: 768px) {
-  .fe-block-footer-seals { grid-area: 5/20/9/25; z-index: 5; }
+  .fe-block-footer-seals { grid-area: 5/16/9/19; z-index: 5; }
 }
 .fe-block-footer-seals .footer-seals {
   display: flex;
@@ -219,10 +215,6 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
 
             <div class="fe-block fe-block-footer-seals">
               <div class="sqs-block-content footer-seals">
-                <!-- Professional verification provided by Psychology Today -->
-                <a href="https://www.psychologytoday.com/profile/128152" class="sx-verified-seal"></a>
-                <!-- End Verification (script is injected by PsychologyTodaySeal.js) -->
-
                 <!-- LegitScript Certification -->
                 <a href="https://www.legitscript.com/websites/?checker_keywords=evolvepsychiatry.com" target="_blank" rel="noopener noreferrer" title="Verify LegitScript Approval for www.evolvepsychiatry.com">
                   <img src="https://static.legitscript.com/seals/14910070.png" alt="Verify LegitScript Approval for www.evolvepsychiatry.com" width="73" height="79" />
@@ -247,9 +239,6 @@ const FOOTER_HTML = `<footer class="sections" id="footer-sections">
 
 export default function SiteFooter() {
   return (
-    <>
-      <div dangerouslySetInnerHTML={{ __html: FOOTER_HTML }} />
-      <PsychologyTodaySeal />
-    </>
+    <div dangerouslySetInnerHTML={{ __html: FOOTER_HTML }} />
   );
 }
